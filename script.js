@@ -192,7 +192,7 @@ document.querySelectorAll(".experience-item").forEach((item) => {
 // =================================
 
 const revealElements = document.querySelectorAll(
-    ".tech-section, .experience-section"
+    ".tech-section, .experience-section, .projects-section"
 );
 
 const revealObserver = new IntersectionObserver(
@@ -214,3 +214,163 @@ revealElements.forEach((element) => {
     element.classList.add("reveal");
     revealObserver.observe(element);
 });
+
+// =================================
+// PROJECT DATA
+// =================================
+
+const projects = [
+    {
+        name: "AOT Inspired Game",
+        category: "Game Development",
+        description: "An Attack on Titan-inspired game built using Luau and Roblox Studio.",
+
+        image: "assets/images/game.png",
+        imageBackground: "linear-gradient(135deg, #e9f5dc 0%, #c8f0a0 55%, #a9e66d 100%)",
+
+        status: "In Development",
+        statusType: "development",
+
+        technologies: ["Luau", "Roblox Studio"],
+
+        website: "YOUR_AOT_GAME_LINK",
+        github: "YOUR_AOT_GITHUB_LINK"
+    },
+
+    {
+        name: "Project Orion",
+        category: "Discord Bot",
+        description: "A personal Discord productivity and developer assistant built with Python.",
+
+        image: "assets/images/orion.png",
+        imageBackground: "linear-gradient(135deg, #dce8f8 0%, #b9c9ed 50%, #a4b9e8 100%)",
+
+        status: "In Development",
+        statusType: "development",
+
+        technologies: ["Python", "Discord", "SQLite"],
+
+        website: "YOUR_ORION_PROJECT_LINK",
+        github: "YOUR_ORION_GITHUB_LINK"
+    }
+];
+
+
+
+
+// =================================
+// PROJECT RENDERER
+// =================================
+
+const projectsGrid = document.getElementById("projectsGrid");
+
+function renderProjects() {
+
+    if (!projectsGrid) return;
+
+    projectsGrid.innerHTML = projects.map(project => {
+
+        const visibleTechnologies = project.technologies.slice(0, 2);
+        const extraTechnologies = project.technologies.length - 2;
+
+        const technologyHTML = visibleTechnologies.map(tech => `
+            <span class="project-tag">${tech}</span>
+        `).join("");
+
+        const moreHTML = extraTechnologies > 0
+            ? `<span class="project-tag-more">+${extraTechnologies}</span>`
+            : "";
+
+        return `
+            <article class="project-card">
+
+                <div
+                    class="project-image-wrapper"
+                    style="--project-image-bg: ${project.imageBackground || "#e5e5e5"}"
+                >
+                    <img
+                        src="${project.image}"
+                        alt="${project.name} preview"
+                        class="project-image"
+                        loading="lazy"
+                    >
+                </div>
+
+                <div class="project-info">
+
+                    <div class="project-title-row">
+
+                        <h3 class="project-title">
+                            ${project.name}
+                        </h3>
+
+                        ${project.status ? `
+                            <span class="project-status ${project.statusType || ""}">
+                                <span class="project-status-dot"></span>
+                                ${project.status}
+                            </span>
+                        ` : ""}
+
+                    </div>
+
+                    <p class="project-category">
+                        ${project.category}
+                    </p>
+
+                    <p class="project-description">
+                        ${project.description}
+                    </p>
+
+                    <div class="project-footer">
+
+                        <div class="project-tags">
+                            ${technologyHTML}
+                            ${moreHTML}
+                        </div>
+
+                        <div class="project-links">
+
+                            <!-- Live Website -->
+                            <a
+                                href="${project.website || "#"}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="View ${project.name} live"
+                                title="Live Website"
+                                class="${project.website ? "" : "disabled"}"
+                            >
+                                <i data-lucide="external-link"></i>
+                            </a>
+
+                            <!-- GitHub -->
+                            <a
+                                href="${project.github || "#"}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="${project.name} GitHub repository"
+                                title="GitHub"
+                                class="${project.github ? "" : "disabled"}"
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    aria-hidden="true"
+                                >
+                                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.48 0-.237-.009-.866-.014-1.7-2.782.604-3.369-1.342-3.369-1.342-.455-1.157-1.11-1.465-1.11-1.465-.908-.62.069-.608.069-.608 1.004.07 1.532 1.031 1.532 1.031.892 1.53 2.341 1.088 2.91.832.091-.646.35-1.088.636-1.339-2.22-.253-4.555-1.11-4.555-4.944 0-1.092.39-1.984 1.03-2.683-.103-.253-.447-1.27.098-2.646 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.748-1.025 2.748-1.025.546 1.376.202 2.393.1 2.646.64.699 1.028 1.591 1.028 2.683 0 3.843-2.339 4.688-4.566 4.937.359.31.678.921.678 1.856 0 1.34-.012 2.42-.012 2.75 0 .265.18.576.688.478A10.003 10.003 0 0 0 22 12c0-5.523-4.477-10-10-10Z"/>
+                                </svg>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </article>
+        `;
+
+    }).join("");
+
+    lucide.createIcons();
+}
+
+renderProjects();
