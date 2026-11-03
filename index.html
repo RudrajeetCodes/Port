@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -21,120 +21,438 @@
 
     <main class="main-container">
 
-        <div class="hero-top">
+        <!-- =================================
+             PROFILE / HERO SECTION
+        ================================== -->
 
-            <div class="brand-icon">
-                <img src="assets/images/profile.png" alt="Logo">
-            </div>
+        <section class="profile-section-wrapper">
 
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                <i data-lucide="moon"></i>
-            </button>
+            <div class="hero-top">
 
-        </div>
-
-        <div class="hero-banner">
-            <img src="assets/images/banner.gif" alt="Portfolio banner">
-        </div>
-
-        <div class="profile-section">
-
-            <div class="profile-left">
-
-                <div class="profile-picture">
-                    <img src="assets/images/profile.png" alt="Rudrajeet Das">
+                <div class="brand-icon">
+                    <img src="assets/images/profile.png" alt="Logo">
                 </div>
 
-                <div class="status-pill">
-                    <span class="status-dot"></span>
-                    <span>Active</span>
-                    <span class="status-divider">·</span>
-                    <span>Mohali, Punjab</span>
-                    <span class="status-divider">·</span>
-                    <span id="localTime">--:--</span>
-                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i data-lucide="moon"></i>
+                </button>
 
             </div>
 
-            <div class="profile-info">
-                <h1>Rudrajeet Das</h1>
+            <div class="hero-banner">
+                <img src="assets/images/banner.gif" alt="Portfolio banner">
+            </div>
 
-                <p class="dynamic-role">
-                    <span id="dynamicRole"></span>
-                    <span class="cursor">|</span>
+            <div class="profile-section">
+
+                <div class="profile-left">
+
+                    <div class="profile-picture">
+                        <img src="assets/images/profile.png" alt="Rudrajeet Das">
+                    </div>
+
+                    <div class="status-pill">
+                        <span class="status-dot"></span>
+                        <span>Active</span>
+                        <span class="status-divider">·</span>
+                        <span>Mohali, Punjab</span>
+                        <span class="status-divider">·</span>
+                        <span id="localTime">--:--</span>
+                    </div>
+
+                </div>
+
+                <div class="profile-info">
+                    <h1>Rudrajeet Das</h1>
+
+                    <p class="dynamic-role">
+                        <span id="dynamicRole"></span>
+                        <span class="cursor">|</span>
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="profile-bio">
+                <p>
+                    I build creative, front-end-focused websites using
+                    <span class="tech-badge">
+                        <i data-lucide="code-2"></i> TypeScript
+                    </span>
+                    and
+                    <span class="tech-badge">
+                        <i data-lucide="triangle"></i> Next.js
+                    </span>
+                    with a strong focus on balancing aesthetics with practicality.
+                    I'm also a game developer, working with
+                    <span class="tech-badge">
+                        <i data-lucide="code"></i> Luau
+                    </span>
+                    and
+                    <span class="tech-badge">
+                        <i data-lucide="gamepad-2"></i> Roblox Studio
+                    </span>
+                    to bring interactive ideas to life.
                 </p>
             </div>
 
-        </div>
+            <div class="profile-actions">
 
-        <div class="profile-bio">
-            <p>
-                I build creative, front-end-focused websites using
-                <span class="tech-badge">
-                    <i data-lucide="code-2"></i> TypeScript
-                </span>
-                and
-                <span class="tech-badge">
-                    <i data-lucide="triangle"></i> Next.js
-                </span>
-                with a strong focus on balancing aesthetics with practicality.
-                I'm also a game developer, working with
-                <span class="tech-badge">
-                    <i data-lucide="code"></i> Luau
-                </span>
-                and
-                <span class="tech-badge">
-                    <i data-lucide="gamepad-2"></i> Roblox Studio
-                </span>
-                to bring interactive ideas to life.
-            </p>
-        </div>
+                <div class="action-buttons">
 
-        <div class="profile-actions">
+                    <a href="assets/resume.pdf" class="btn-resume" target="_blank">
+                        <i data-lucide="file-text"></i>
+                        <span>Resume</span>
+                    </a>
 
-            <div class="action-buttons">
+                    <a href="mailto:your@email.com" class="btn-contact">
+                        <i data-lucide="send"></i>
+                        <span>Get in Touch</span>
+                    </a>
 
-                <a href="assets/resume.pdf" class="btn-resume" target="_blank">
-                    <i data-lucide="file-text"></i>
-                    <span>Resume</span>
-                </a>
+                </div>
 
-                <a href="mailto:your@email.com" class="btn-contact">
-                    <i data-lucide="send"></i>
-                    <span>Get in Touch</span>
-                </a>
+                <div class="social-links">
 
-            </div>
+                    <a href="#" aria-label="X">
+                        <i class="fa-brands fa-x-twitter"></i>
+                    </a>
 
-            <div class="social-links">
+                    <a href="#" aria-label="LinkedIn">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
 
-                <a href="#" aria-label="X">
-                    <i class="fa-brands fa-x-twitter"></i>
-                </a>
+                    <a href="#" aria-label="Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
 
-                <a href="#" aria-label="LinkedIn">
-                    <i class="fa-brands fa-linkedin"></i>
-                </a>
+                    <a href="#" aria-label="Pinterest">
+                        <i class="fa-brands fa-pinterest-p"></i>
+                    </a>
 
-                <a href="#" aria-label="Instagram">
-                    <i class="fa-brands fa-instagram"></i>
-                </a>
+                    <a href="#" aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
 
-                <a href="#" aria-label="Pinterest">
-                    <i class="fa-brands fa-pinterest-p"></i>
-                </a>
+                    <a href="mailto:your@email.com" aria-label="Email">
+                        <i class="fa-regular fa-envelope"></i>
+                    </a>
 
-                <a href="#" aria-label="GitHub">
-                    <i class="fa-brands fa-github"></i>
-                </a>
-
-                <a href="mailto:your@email.com" aria-label="Email">
-                    <i class="fa-regular fa-envelope"></i>
-                </a>
+                </div>
 
             </div>
 
-        </div>
+        </section>
+
+
+        <!-- =================================
+             SECTION DIVIDER
+        ================================== -->
+
+        <div class="section-divider"></div>
+
+
+        <!-- =================================
+             TECH STACK SECTION
+        ================================== -->
+
+        <section class="tech-section">
+
+            <div class="section-heading">
+                <span class="section-label">Expertise</span>
+                <h2>Tech Stack &amp; Tools</h2>
+            </div>
+
+            <div class="tech-stack">
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/javascript/888888" alt="">
+                    <span>JavaScript</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/typescript/888888" alt="">
+                    <span>TypeScript</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/cplusplus/888888" alt="">
+                    <span>C++</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/c/888888" alt="">
+                    <span>C</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/python/888888" alt="">
+                    <span>Python</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/lua/888888" alt="">
+                    <span>Lua</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/openjdk/888888" alt="">
+                    <span>Java</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="">
+                    <span>VS Code</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/git/888888" alt="">
+                    <span>Git</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/github/888888" alt="">
+                    <span>GitHub</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/linux/888888" alt="">
+                    <span>Linux</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/sqlite/888888" alt="">
+                    <span>SQLite</span>
+                </div>
+
+                <div class="tech-tag">
+                    <img src="https://cdn.simpleicons.org/vercel/888888" alt="">
+                    <span>Vercel</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================
+             SECTION DIVIDER
+        ================================== -->
+
+        <div class="section-divider"></div>
+
+
+
+        <!-- =================================
+            EXPERIENCE SECTION
+        ================================== -->
+
+        <section class="experience-section">
+
+            <div class="section-heading">
+                <span class="section-label">Career Path</span>
+                <h2>Experience &amp; Impact</h2>
+            </div>
+
+            <div class="experience-list">
+
+                <!-- GAME DEVELOPMENT -->
+
+                <details class="experience-item">
+
+                    <summary class="experience-summary">
+
+                        <div class="experience-left">
+
+                            <div class="experience-icon">
+                                <i data-lucide="gamepad-2"></i>
+                            </div>
+
+                            <div class="experience-info">
+                                <h3>Game Development</h3>
+                                <p>Game Developer</p>
+                            </div>
+
+                        </div>
+
+                        <div class="experience-right">
+                            <span class="experience-date">2024 - 2025</span>
+                            <span class="experience-type">Personal Projects</span>
+                        </div>
+
+                        <i data-lucide="chevron-down" class="experience-chevron"></i>
+
+                    </summary>
+
+                    <div class="experience-details">
+
+                        <div class="experience-detail-header">
+                            <span>GAME DEVELOPMENT</span>
+                        </div>
+
+                        <div class="experience-log">
+
+                            <div class="log-entry">
+                                <span class="log-marker">01</span>
+                                <p>Built a custom physics engine in Lua.</p>
+                            </div>
+
+                            <div class="log-entry">
+                                <span class="log-marker">02</span>
+                                <p>Created custom animations, graphics, and models.</p>
+                            </div>
+
+                            <div class="log-entry">
+                                <span class="log-marker">03</span>
+                                <p>Developed interactive game systems.</p>
+                            </div>
+
+                        </div>
+
+                        <div class="experience-tech">
+                            <span>Lua</span>
+                            <span>Physics</span>
+                            <span>Game Systems</span>
+                        </div>
+
+                    </div>
+
+                </details>
+
+
+                <!-- PROGRAMMING -->
+
+                <details class="experience-item">
+
+                    <summary class="experience-summary">
+
+                        <div class="experience-left">
+
+                            <div class="experience-icon">
+                                <i data-lucide="code-2"></i>
+                            </div>
+
+                            <div class="experience-info">
+                                <h3>Programming</h3>
+                                <p>C++ · C · Java · Python</p>
+                            </div>
+
+                        </div>
+
+                        <div class="experience-right">
+                            <span class="experience-date">2025 - 2026</span>
+                            <span class="experience-type">Learning &amp; Projects</span>
+                        </div>
+
+                        <i data-lucide="chevron-down" class="experience-chevron"></i>
+
+                    </summary>
+
+                    <div class="experience-details">
+
+                        <div class="experience-detail-header">
+                            <span>PROGRAMMING</span>
+                        </div>
+
+                        <div class="experience-log">
+
+                            <div class="log-entry">
+                                <span class="log-marker">01</span>
+                                <p>Explored programming fundamentals and problem-solving.</p>
+                            </div>
+
+                            <div class="log-entry">
+                                <span class="log-marker">02</span>
+                                <p>Worked with multiple programming languages and development tools.</p>
+                            </div>
+
+                            <div class="log-entry">
+                                <span class="log-marker">03</span>
+                                <p>Applied programming concepts through practical projects.</p>
+                            </div>
+
+                        </div>
+
+                        <div class="experience-tech">
+                            <span>C++</span>
+                            <span>C</span>
+                            <span>Java</span>
+                            <span>Python</span>
+                        </div>
+
+                    </div>
+
+                </details>
+
+
+                <!-- WEB DEVELOPMENT -->
+
+                <details class="experience-item">
+
+                    <summary class="experience-summary">
+
+                        <div class="experience-left">
+
+                            <div class="experience-icon">
+                                <i data-lucide="globe"></i>
+                            </div>
+
+                            <div class="experience-info">
+                                <h3>Web Development</h3>
+                                <p>Front-End Development</p>
+                            </div>
+
+                        </div>
+
+                        <div class="experience-right">
+                            <span class="experience-date">2026 - Present</span>
+                            <span class="experience-type">Learning</span>
+                        </div>
+
+                        <i data-lucide="chevron-down" class="experience-chevron"></i>
+
+                    </summary>
+
+                    <div class="experience-details">
+
+                        <div class="experience-detail-header">
+                            <span>WEB DEVELOPMENT</span>
+                        </div>
+
+                        <div class="experience-log">
+
+                            <div class="log-entry">
+                                <span class="log-marker">01</span>
+                                <p>Building responsive and visually polished web interfaces.</p>
+                            </div>
+
+                            <div class="log-entry">
+                                <span class="log-marker">02</span>
+                                <p>Exploring modern front-end development with TypeScript and Next.js.</p>
+                            </div>
+
+                            <div class="log-entry">
+                                <span class="log-marker">03</span>
+                                <p>Focusing on clean design, usability, and practical implementation.</p>
+                            </div>
+
+                        </div>
+
+                        <div class="experience-tech">
+                            <span>TypeScript</span>
+                            <span>Next.js</span>
+                            <span>HTML</span>
+                            <span>CSS</span>
+                        </div>
+
+                    </div>
+
+                </details>
+
+            </div>
+
+        </section>
+
 
 
     </main>
