@@ -1,6 +1,9 @@
 
 let cachedAccessToken = null;
 let tokenExpiresAt = 0;
+let recentTrackCache = null;
+let recentTrackFetchedAt = 0;
+let recentTrackRetryAt = 0;
 
 async function getSpotifyAccessToken() {
     // Reuse the token while it is valid.
@@ -95,25 +98,51 @@ export default async function handler(req, res) {
             );
         }
 
-        // If nothing is playing, get the latest listening history.
+        // If nothing is playing, use cached listening history first.
         if (!track) {
-            const recentResponse = await fetch(
-                "https://api.spotify.com/v1/me/player/recently-played?limit=1",
-                { headers }
-            );
+            const now = Date.now();
+            const cacheIsFresh = now - recentTrackFetchedAt < 60000;
 
-            if (!recentResponse.ok) {
-                throw new Error(
-                    `Spotify history request failed: ${recentResponse.status}`
+            if (cacheIsFresh) {
+                track = recentTrackCache;
+            } else if (now >= recentTrackRetryAt) {
+                const recentResponse = await fetch(
+                    "https://api.spotify.com/v1/me/player/recently-played?limit=1",
+                    { headers }
                 );
-            }
 
-            const recentData = await recentResponse.json();
-            const recentItem = recentData.items?.[0];
+                if (recentResponse.status === 429) {
+                    const retryAfter = Number(
+                        recentResponse.headers.get("Retry-After") || 60
+                    );
 
-            if (recentItem) {
-                track = recentItem.track;
-                playedAt = recentItem.played_at;
+                    recentTrackRetryAt = now + retryAfter * 1000;
+
+                    console.warn(
+                        `[Spotify] Rate limited. Retrying after ${retryAfter} seconds.`
+                    );
+
+                    track = recentTrackCache;
+                } else if (!recentResponse.ok) {
+                    throw new Error(
+                        `Spotify history request failed: ${recentResponse.status}`
+                    );
+                } else {
+                    const recentData = await recentResponse.json();
+                    const recentItem = recentData.items?.[0];
+
+                    recentTrackCache = recentItem?.track || null;
+                    recentTrackFetchedAt = now;
+                    recentTrackRetryAt = 0;
+
+                    track = recentTrackCache;
+
+                    if (recentItem) {
+                        playedAt = recentItem.played_at;
+                    }
+                }
+            } else {
+                track = recentTrackCache;
             }
         }
 
