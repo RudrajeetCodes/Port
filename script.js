@@ -442,94 +442,196 @@ renderProjects();
 
 
 // =================================
-// GITHUB COMMIT ACTIVITY
+// GITHUB ACTIVITY — LIVE API
 // =================================
-
-const githubActivity = [
-    {
-        message: "Add Dev Stats section and theme-aware contribution legend",
-        repo: "Port",
-        date: "Nov 4, 2026",
-        type: "commits"
-    },
-    {
-        message: "Add About section and refine theme styling",
-        repo: "Port",
-        date: "Nov 4, 2026",
-        type: "commits"
-    },
-    {
-        message: "style: refine light theme with cool pink palette",
-        repo: "Port",
-        date: "Nov 4, 2026",
-        type: "commits"
-    },
-    {
-        message: "feat: add projects section and improve portfolio UI",
-        repo: "Port",
-        date: "Nov 3, 2026",
-        type: "commits"
-    },
-    {
-        message: "Build portfolio experience section and animations",
-        repo: "Port",
-        date: "Nov 3, 2026",
-        type: "commits"
-    }
-];
 
 const activityList = document.getElementById("github-activity-list");
 const activityTabs = document.querySelectorAll(".activity-tab");
 const showMoreButton = document.getElementById("activity-show-more");
 
 let activeActivityFilter = "commits";
+let githubActivity = [];
+let activityCounts = {};
+let currentActivityPage = 1;
+let activityHasMore = false;
 let showAllActivity = false;
+let activityLoading = false;
 
+// Safely display API-provided text
+function escapeActivityHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
+
+// Format GitHub dates
+function formatActivityDate(date) {
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+        return "Unknown date";
+    }
+
+    return parsedDate.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+    });
+}
+
+// Update tab counts
+function updateActivityCounts() {
+    activityTabs.forEach(tab => {
+        const countElement = tab.querySelector("span");
+
+        if (countElement) {
+            countElement.textContent =
+                activityCounts[tab.dataset.filter] ?? 0;
+        }
+    });
+}
+
+// Fetch GitHub activity
+async function fetchGithubActivity(page = 1, append = false) {
+    if (!activityList || activityLoading) return;
+
+    activityLoading = true;
+
+    if (!append) {
+        activityList.innerHTML = `
+            <div class="github-activity-empty">
+                Loading GitHub activity...
+            </div>
+        `;
+    }
+
+    if (showMoreButton) {
+        showMoreButton.hidden = true;
+    }
+
+    try {
+        const response = await fetch(
+            `https://port-two-kohl.vercel.app/api/github?type=${encodeURIComponent(activeActivityFilter)}&page=${page}`
+        );
+
+        if (!response.ok) {
+            throw new Error(`API request failed (${response.status})`);
+        }
+
+        const data = await response.json();
+
+        activityCounts = data.counts || {};
+        activityHasMore = Boolean(data.hasMore);
+        currentActivityPage = data.page || page;
+
+        githubActivity = append
+            ? [...githubActivity, ...(data.items || [])]
+            : (data.items || []);
+
+        updateActivityCounts();
+        renderGithubActivity();
+
+    } catch (error) {
+        console.error("GitHub activity error:", error);
+
+        if (!append) {
+            activityList.innerHTML = `
+                <div class="github-activity-empty">
+                    Unable to load GitHub activity. Please try again later.
+                </div>
+            `;
+        }
+
+        if (showMoreButton) {
+            showMoreButton.hidden = true;
+        }
+
+    } finally {
+        activityLoading = false;
+    }
+}
+
+// Render activity
 function renderGithubActivity() {
     if (!activityList) return;
 
-    const filteredActivity = githubActivity.filter(
-        activity => activity.type === activeActivityFilter
-    );
-
     const visibleActivity = showAllActivity
-        ? filteredActivity
-        : filteredActivity.slice(0, 4);
+        ? githubActivity
+        : githubActivity.slice(0, 4);
 
-    if (filteredActivity.length === 0) {
+    if (githubActivity.length === 0) {
         activityList.innerHTML = `
             <div class="github-activity-empty">
                 No ${activeActivityFilter} activity to show.
             </div>
         `;
     } else {
-        activityList.innerHTML = visibleActivity.map(activity => `
-            <div class="github-activity-item">
+        activityList.innerHTML = visibleActivity.map(activity => {
+            const message = escapeActivityHTML(activity.message);
+            const repo = escapeActivityHTML(
+                activity.repo.split("/").pop()
+            );
+            const date = escapeActivityHTML(
+                formatActivityDate(activity.date)
+            );
 
-                <span class="activity-commit-icon" aria-hidden="true">⌘</span>
+            const url = typeof activity.url === "string" &&
+                activity.url.startsWith("https://github.com/")
+                ? activity.url
+                : "#";
 
-                <span class="activity-commit-message" title="${activity.message}">
-                    ${activity.message}
-                </span>
+            return `
+                <a
+                    class="github-activity-item"
+                    href="${url}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="text-decoration: none; color: inherit;"
+                >
+                    <span class="activity-commit-icon" aria-hidden="true">⌘</span>
 
-                <span class="activity-commit-repo">
-                    ${activity.repo}
-                </span>
+                    <span
+                        class="activity-commit-message"
+                        title="${message}"
+                    >
+                        ${message}
+                    </span>
 
-                <span class="activity-commit-date">
-                    ${activity.date}
-                </span>
+                    <span class="activity-commit-repo">
+                        ${repo}
+                    </span>
 
-            </div>
-        `).join("");
+                    <span class="activity-commit-date">
+                        ${date}
+                    </span>
+                </a>
+            `;
+        }).join("");
     }
 
-    showMoreButton.hidden = filteredActivity.length <= 4;
-    showMoreButton.textContent = showAllActivity ? "Show less" : "Show more";
+    if (!showMoreButton) return;
+
+    if (githubActivity.length <= 4 && !activityHasMore) {
+        showMoreButton.hidden = true;
+        return;
+    }
+
+    showMoreButton.hidden = false;
+
+    if (!showAllActivity) {
+        showMoreButton.textContent = "Show more";
+    } else if (activityHasMore) {
+        showMoreButton.textContent = "Load more";
+    } else {
+        showMoreButton.textContent = "Show less";
+    }
 }
 
 // Tab switching
-
 activityTabs.forEach(tab => {
     tab.addEventListener("click", () => {
         activityTabs.forEach(item => {
@@ -541,20 +643,40 @@ activityTabs.forEach(tab => {
         tab.setAttribute("aria-selected", "true");
 
         activeActivityFilter = tab.dataset.filter;
+
+        githubActivity = [];
+        currentActivityPage = 1;
+        activityHasMore = false;
         showAllActivity = false;
 
-        renderGithubActivity();
+        fetchGithubActivity(1);
     });
 });
 
-// Show more / less
+// Show more / load more / show less
+if (showMoreButton) {
+    showMoreButton.addEventListener("click", async () => {
+        if (activityLoading) return;
 
-showMoreButton.addEventListener("click", () => {
-    showAllActivity = !showAllActivity;
-    renderGithubActivity();
-});
+        if (!showAllActivity) {
+            showAllActivity = true;
+            renderGithubActivity();
+            return;
+        }
 
-renderGithubActivity();
+        if (activityHasMore) {
+            await fetchGithubActivity(currentActivityPage + 1, true);
+            return;
+        }
+
+        showAllActivity = false;
+        renderGithubActivity();
+    });
+}
+
+// Initial load
+fetchGithubActivity();
+
 
 // =================================
 // FLOATING NAVIGATION
