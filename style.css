@@ -1208,3 +1208,283 @@ body,
     fill: currentColor;
     display: block;
 }
+
+
+/* ==============================
+   PROFILE ACTIVITY
+============================== */
+
+.profile-activity {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+
+    margin: 30px 30px 0;
+}
+
+.activity-card {
+    min-width: 0;
+    min-height: 92px;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 15px 16px;
+
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-secondary);
+    border-radius: 13px;
+
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.activity-card:hover {
+    border-color: var(--border-hover);
+}
+
+/* Music artwork */
+
+.activity-artwork {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-secondary);
+    border-radius: 9px;
+
+    color: var(--text-muted);
+}
+
+.activity-artwork svg {
+    width: 23px;
+    height: 23px;
+}
+
+/* Activity information */
+
+.activity-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    min-width: 0;
+}
+
+.activity-label {
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.9px;
+}
+
+.activity-title {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.activity-subtitle {
+    color: var(--text-muted);
+    font-size: 11px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Right-side icons */
+
+.activity-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: auto;
+    flex-shrink: 0;
+
+    color: var(--text-muted);
+}
+
+.activity-action svg {
+    width: 17px;
+    height: 17px;
+}
+
+/* Current focus */
+
+.focus-status-dot {
+    width: 9px;
+    height: 9px;
+    flex-shrink: 0;
+
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 9px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.focus-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.focus-title svg {
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+
+/* ==============================
+   ABOUT SECTION
+============================== */
+
+.about-section {
+    width: 100%;
+    padding: 35px 32px 40px;
+}
+
+.about-section .section-heading {
+    margin-bottom: 28px;
+}
+
+/* About profile layout */
+
+.about-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+}
+
+/* Portrait */
+
+.about-picture {
+    width: 220px;
+    height: 220px;
+    flex: 0 0 220px;
+
+    overflow: hidden;
+    border-radius: 18px;
+
+    background: var(--bg-secondary);
+}
+
+.about-picture img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+/* About information */
+
+.about-info {
+    flex: 1;
+    min-width: 0;
+    padding-top: 2px;
+}
+
+.about-info h3 {
+    color: var(--text-primary);
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    line-height: 1.3;
+}
+
+.about-description {
+    margin-top: 12px;
+
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.8;
+}
+
+/* Skills */
+
+.about-skills {
+    margin-top: 20px;
+}
+
+.about-skills h4 {
+    margin-bottom: 10px;
+
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.about-skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.about-skill-list span {
+    padding: 6px 9px;
+
+    background: var(--bg-secondary);
+    border: 1px dashed var(--border-primary);
+    border-radius: 7px;
+
+    color: var(--text-secondary);
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+/* Activity cards inside About */
+
+.about-section .profile-activity {
+    margin: 30px 0 0;
+}
+
+/* Responsive layout */
+
+@media (max-width: 650px) {
+
+    .about-section {
+        padding: 30px 20px 35px;
+    }
+
+    .about-content {
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .about-picture {
+        width: 170px;
+        height: 170px;
+        flex-basis: 170px;
+    }
+
+    .about-info h3 {
+        font-size: 25px;
+    }
+
+    .about-section .profile-activity {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+}
+
+
+
