@@ -895,3 +895,147 @@ updateActiveSection();
 
     connectLanyard();
 })();
+
+
+// =================================
+// GITHUB CONTRIBUTION CALENDAR
+// =================================
+
+async function fetchGithubContributions() {
+    const graph = document.getElementById("github-graph");
+    const months = document.getElementById("github-months");
+    const total = document.getElementById("github-total");
+    const lastYear = document.getElementById("github-last-year");
+
+    if (!graph || !months) return;
+
+    try {
+        const response = await fetch(
+            "https://port-two-kohl.vercel.app/api/github?type=commits"
+        );
+
+        if (!response.ok) {
+            throw new Error("Unable to fetch GitHub contributions");
+        }
+
+        const data = await response.json();
+        const days = data.contributionDays || [];
+
+        if (!days.length) {
+            graph.textContent = "Contribution data unavailable";
+            return;
+        }
+
+        const sortedDays = [...days].sort(
+            (a, b) => a.date.localeCompare(b.date)
+        );
+
+        const firstDate = new Date(`${sortedDays[0].date}T00:00:00`);
+        const startOffset = firstDate.getDay();
+
+        const calendarDays = [
+            ...Array(startOffset).fill(null),
+            ...sortedDays
+        ];
+
+        const totalContributions = sortedDays.reduce(
+            (sum, day) => sum + day.contributionCount,
+            0
+        );
+
+        if (total) {
+            total.textContent = totalContributions.toLocaleString();
+        }
+
+        if (lastYear) {
+            lastYear.textContent =
+                `${totalContributions.toLocaleString()} contributions in the last year`;
+        }
+
+        const maxCount = Math.max(
+            ...sortedDays.map(day => day.contributionCount),
+            1
+        );
+
+        function getLevel(count) {
+            if (count === 0) return 0;
+
+            const ratio = count / maxCount;
+
+            if (ratio <= 0.25) return 1;
+            if (ratio <= 0.50) return 2;
+            if (ratio <= 0.75) return 3;
+
+            return 4;
+        }
+
+        graph.innerHTML = "";
+        months.innerHTML = "";
+
+        graph.classList.add("github-graph-loaded");
+
+        const weekCount = Math.ceil(calendarDays.length / 7);
+
+        graph.style.setProperty("--week-count", weekCount);
+
+        const monthLabels = new Map();
+
+        sortedDays.forEach(day => {
+            const date = new Date(`${day.date}T00:00:00`);
+            const index =
+                Math.floor((date - firstDate) / 86400000) + startOffset;
+
+            const week = Math.floor(index / 7) + 1;
+            const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
+
+            if (!monthLabels.has(monthKey)) {
+                monthLabels.set(monthKey, {
+                    name: date.toLocaleDateString("en-US", {
+                        month: "short"
+                    }),
+                    week
+                });
+            }
+        });
+
+        monthLabels.forEach(month => {
+            const label = document.createElement("span");
+
+            label.textContent = month.name;
+            label.style.gridColumn = month.week;
+
+            months.appendChild(label);
+        });
+
+        calendarDays.forEach(day => {
+            const cell = document.createElement("span");
+
+            if (!day) {
+                cell.className = "contribution-cell empty";
+                cell.setAttribute("aria-hidden", "true");
+            } else {
+                const count = day.contributionCount;
+
+                cell.className =
+                    `contribution-cell level-${getLevel(count)}`;
+
+                cell.title =
+                    `${count} contributions on ${day.date}`;
+
+                cell.setAttribute(
+                    "aria-label",
+                    `${count} contributions on ${day.date}`
+                );
+            }
+
+            graph.appendChild(cell);
+        });
+
+    } catch (error) {
+        console.error("GitHub contribution calendar error:", error);
+        graph.textContent = "Unable to load contribution activity";
+    }
+}
+
+fetchGithubContributions();
+

@@ -11,6 +11,20 @@ const SEARCH_QUERIES = {
 };
 
 export default async function handler(req, res) {
+    const origin = req.headers.origin;
+
+    const allowedOrigins = [
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+        "https://port-two-kohl.vercel.app"
+    ];
+
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+    }
+
+    res.setHeader("Vary", "Origin");
+
     if (req.method !== "GET") {
         return res.status(405).json({
             error: "Method not allowed"
