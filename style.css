@@ -1566,10 +1566,17 @@ body,
     min-width: 0;
 }
 
+
 .coding-stat:nth-child(2) {
+    position: static;
+    transform: none;
+    grid-column: 2;
+    justify-self: stretch;
     align-items: center;
     text-align: center;
 }
+
+
 
 .coding-stat:nth-child(3) {
     align-items: flex-end;
