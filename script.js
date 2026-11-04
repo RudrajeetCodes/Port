@@ -64,6 +64,16 @@ const savedTheme = localStorage.getItem("theme") || "dark";
 
 function setTheme(theme) {
     html.setAttribute("data-theme", theme);
+
+    // Switch profile banner based on theme
+    const profileBanner = document.getElementById("profileBanner");
+
+    if (profileBanner) {
+        profileBanner.src = theme === "light"
+            ? "assets/images/bannerW.gif"
+            : "assets/images/banner.gif";
+    }
+
     localStorage.setItem("theme", theme);
 
     const isDark = theme === "dark";
@@ -553,3 +563,96 @@ window.addEventListener("scroll", updateActiveSection, {
 window.addEventListener("resize", updateActiveSection);
 
 updateActiveSection();
+
+
+// =================================
+// DISCORD STATUS — LANYARD API
+// =================================
+
+
+
+(() => {
+    console.log("[Lanyard] Script initialized");
+
+    const LANYARD_USER_ID = "321037704563523584";
+
+    const statusDot = document.getElementById("discordStatusDot");
+    const statusText = document.getElementById("discordStatusText");
+
+    if (!statusDot || !statusText) {
+        console.error("[Lanyard] Status elements not found. Check index.html IDs.");
+        return;
+    }
+
+    let socket;
+    let heartbeat;
+    let reconnectTimer;
+
+    function updateDiscordStatus(status) {
+        console.log("[Lanyard] Discord status:", status);
+
+        if (!status) return;
+
+        const offline = status === "offline";
+
+        statusText.textContent = offline ? "Offline" : "Active";
+        statusDot.dataset.status = offline ? "offline" : "online";
+    }
+
+    function connectLanyard() {
+        console.log("[Lanyard] Connecting...");
+
+        socket = new WebSocket("wss://api.lanyard.rest/socket");
+
+        socket.addEventListener("open", () => {
+            console.log("[Lanyard] WebSocket connected");
+        });
+
+        socket.addEventListener("message", (event) => {
+            const message = JSON.parse(event.data);
+
+            console.log("[Lanyard] Received:", message);
+
+            // Hello
+            if (message.op === 1) {
+                socket.send(JSON.stringify({
+                    op: 2,
+                    d: {
+                        subscribe_to_id: LANYARD_USER_ID
+                    }
+                }));
+
+                heartbeat = setInterval(() => {
+                    if (socket.readyState === WebSocket.OPEN) {
+                        socket.send(JSON.stringify({ op: 3 }));
+                    }
+                }, message.d.heartbeat_interval);
+            }
+
+            // Initial presence
+            if (message.t === "INIT_STATE") {
+                updateDiscordStatus(message.d.discord_status);
+            }
+
+            // Live presence update
+            if (message.t === "PRESENCE_UPDATE") {
+                updateDiscordStatus(message.d.discord_status);
+            }
+        });
+
+        socket.addEventListener("error", (error) => {
+            console.error("[Lanyard] WebSocket error:", error);
+        });
+
+        socket.addEventListener("close", () => {
+            console.warn("[Lanyard] Connection closed. Reconnecting...");
+
+            clearInterval(heartbeat);
+            clearTimeout(reconnectTimer);
+
+            reconnectTimer = setTimeout(connectLanyard, 5000);
+        });
+    }
+
+    connectLanyard();
+})();

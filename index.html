@@ -25,7 +25,7 @@
              PROFILE / HERO SECTION
         ================================== -->
 
-        <section class="profile-section-wrapper">
+        <section class="profile-section-wrapper" id="home">
 
             <div class="hero-top">
 
@@ -40,7 +40,7 @@
             </div>
 
             <div class="hero-banner">
-                <img src="assets/images/banner.gif" alt="Portfolio banner">
+                <img id="profileBanner" src="assets/images/banner.gif" alt="Portfolio banner">
             </div>
 
             <div class="profile-section">
@@ -52,8 +52,8 @@
                     </div>
 
                     <div class="status-pill">
-                        <span class="status-dot"></span>
-                        <span>Active</span>
+                        <span class="status-dot" id="discordStatusDot"></span>
+                        <span id="discordStatusText">Connecting...</span>
                         <span class="status-divider">·</span>
                         <span>Mohali, Punjab</span>
                         <span class="status-divider">·</span>
@@ -247,7 +247,7 @@
             EXPERIENCE SECTION
         ================================== -->
 
-        <section class="experience-section">
+        <section class="experience-section" id="experience">
 
             <div class="section-heading">
                 <span class="section-label">Career Path</span>
@@ -455,7 +455,7 @@
 
         <div class="section-divider"></div>
 
-        <section class="projects-section reveal">
+        <section class="projects-section reveal" id="projects">
 
             <div class="projects-heading">
                 <div class="section-heading">
@@ -484,7 +484,7 @@
      ABOUT SECTION
 ================================== -->
 
-        <section class="about-section reveal">
+        <section class="about-section reveal" id="about">
 
             <div class="section-heading">
                 <span class="section-label">About</span>
@@ -739,7 +739,7 @@
         </section>
 
         <div class="section-divider"></div>
-        
+
         <!-- =================================
              FOOTER
         ================================== -->
@@ -747,6 +747,56 @@
         <footer class="site-footer">
             <p>Made by Rudrajeet · High on Caffeine ☕</p>
         </footer>
+
+        <!-- =================================
+     FLOATING SECTION NAVIGATION
+================================== -->
+
+        <nav class="floating-nav" aria-label="Section navigation">
+
+            <a href="#home" class="nav-item active" data-section="home">
+                <span class="nav-arrow">→</span>
+                <span>Home</span>
+            </a>
+
+            <a href="#experience" class="nav-item" data-section="experience">
+                <span class="nav-arrow">→</span>
+                <span>Experience</span>
+            </a>
+
+            <a href="#projects" class="nav-item" data-section="projects">
+                <span class="nav-arrow">→</span>
+                <span>Projects</span>
+            </a>
+
+            <a href="#about" class="nav-item" data-section="about">
+                <span class="nav-arrow">→</span>
+                <span>About</span>
+            </a>
+
+            <a href="#dev-stats" class="nav-item" data-section="dev-stats">
+                <span class="nav-arrow">→</span>
+                <span>Dev Stats</span>
+            </a>
+
+        </nav>
+
+        <!-- LEFT PAGE NAVIGATION -->
+        <nav class="page-nav" aria-label="Page navigation">
+
+            <a href="index.html" class="page-nav-item active" aria-label="Home" title="Home">
+                <i data-lucide="house"></i>
+            </a>
+
+            <a href="personal.html" class="page-nav-item" aria-label="Personal" title="Personal">
+                <i data-lucide="user-round"></i>
+            </a>
+
+            <a href="fun.html" class="page-nav-item" aria-label="Fun Stuff" title="Fun Stuff">
+                <i data-lucide="gamepad-2"></i>
+            </a>
+
+        </nav>
 
 
 

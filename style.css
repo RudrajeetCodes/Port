@@ -29,37 +29,46 @@
     --button-secondary-text: #aaaaaa;
     --button-secondary-border: #444444;
 
-    --accent: #45c982;
+    --accent: #FFFFFF;
 }
+
+/* ==============================
+   LIGHT THEME — DUSTY PINK
+============================== */
 
 [data-theme="light"] {
     color-scheme: light;
 
-    --bg-primary: #F5EAF5;
-    --bg-secondary: #F0E3F1;
-    --bg-tertiary: #EADFF0;
+    /* Backgrounds */
+    --bg-primary: #F5E5EF;
+    --bg-secondary: #EED9E7;
+    --bg-tertiary: #E8CDDF;
 
-    --text-primary: #352D38;
-    --text-secondary: #746878;
-    --text-muted: #8F8293;
-    --text-subtle: #A99BAA;
+    /* Text */
+    --text-primary: #392B36;
+    --text-secondary: #766171;
+    --text-muted: #967E91;
+    --text-subtle: #B09AAA;
 
-    --border-primary: #D2BED5;
-    --border-secondary: #E0D0E3;
-    --border-hover: #BDA5C4;
+    /* Borders */
+    --border-primary: #D8B8CE;
+    --border-secondary: #E4CBDC;
+    --border-hover: #C99BB9;
 
-    --badge-bg: #F0E3F1;
-    --badge-border: #E1D3E4;
-    --badge-text: #65566A;
+    /* Badges */
+    --badge-bg: #EED9E7;
+    --badge-border: #DFC1D5;
+    --badge-text: #75566C;
 
-    --button-primary-bg: #352D38;
+    /* Buttons */
+    --button-primary-bg: #392B36;
     --button-primary-text: #FFFFFF;
-    --button-primary-hover: #514657;
+    --button-primary-hover: #574052;
+    --button-secondary-text: #766171;
+    --button-secondary-border: #D8B8CE;
 
-    --button-secondary-text: #746878;
-    --button-secondary-border: #D8C9DC;
-
-    --accent: #8296C5;
+    /* Accent */
+    --accent: #B66F9B;
 }
 
 
@@ -272,6 +281,32 @@ body {
 
 .status-divider {
     color: var(--text-subtle);
+}
+
+/* Discord presence status */
+
+.status-dot[data-status="online"] {
+    background: #FFFFFF;
+}
+
+.status-dot[data-status="offline"] {
+    background: #000000;
+}
+
+/* Profile status pill — Light theme */
+
+html[data-theme="light"] .status-pill {
+    background: #F0D7E6 !important;
+    border: 1px solid #DDB8CF !important;
+    color: #754D66 !important;
+}
+
+html[data-theme="light"] .status-divider {
+    color: #B88BA8;
+}
+
+html[data-theme="light"] .status-dot {
+    background: #8296C5;
 }
 
 
@@ -2058,6 +2093,76 @@ body,
 
 [data-theme="light"] .nav-arrow {
     color: var(--accent);
+}
+
+/* ==============================
+   LEFT PAGE NAVIGATION
+============================== */
+
+.page-nav {
+    position: fixed;
+
+    top: 50%;
+    left: calc(50% - 437.5px - (100vw - 875px) / 4);
+
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    padding: 10px;
+
+    background: rgba(24, 24, 24, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 12px;
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.page-nav-item {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--text-muted);
+    opacity: 0.45;
+
+    text-decoration: none;
+    border-radius: 10px;
+
+    transition: all 0.2s ease;
+}
+
+.page-nav-item svg {
+    width: 19px;
+    height: 19px;
+    stroke-width: 1.8;
+}
+
+.page-nav-item:hover {
+    color: var(--text-primary);
+    opacity: 0.8;
+}
+
+.page-nav-item.active {
+    color: var(--accent);
+    opacity: 1;
+}
+
+/* Light theme */
+
+[data-theme="light"] .page-nav {
+    background: rgba(240, 227, 241, 0.78);
+    border-color: rgba(120, 100, 130, 0.16);
+    box-shadow: 0 8px 30px rgba(70, 50, 80, 0.08);
 }
 
 
