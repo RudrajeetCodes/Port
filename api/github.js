@@ -112,6 +112,12 @@ export default async function handler(req, res) {
                                         totalCommitContributions
                                         contributionCalendar {
                                             totalContributions
+                                            weeks{
+                                                contributionDays{
+                                                    contributionCount
+                                                    date
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -123,8 +129,7 @@ export default async function handler(req, res) {
 
             if (!graphqlResponse.ok) {
                 throw new Error(
-                    `GraphQL error (${graphqlResponse.status}): ${
-                        await graphqlResponse.text()
+                    `GraphQL error (${graphqlResponse.status}): ${await graphqlResponse.text()
                     }`
                 );
             }
@@ -194,6 +199,11 @@ export default async function handler(req, res) {
             counts,
             contributions:
                 contributionStats?.contributionCalendar?.totalContributions ?? null,
+
+            contributionDays:
+                contributionStats?.contributionCalendar?.weeks
+                    ?.flatMap(week => week.contributionDays) ?? [],
+
             items,
             page,
             hasMore: items.length === 100
