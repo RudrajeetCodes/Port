@@ -1572,8 +1572,8 @@ body,
 }
 
 .coding-stat:nth-child(3) {
-    align-items: flex-end;
-    text-align: right;
+    align-items: center;
+    text-align: center;
 }
 
 .coding-stat strong,
