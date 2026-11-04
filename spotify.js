@@ -6,7 +6,7 @@
 
     const CLIENT_ID = "7c27bec7306f43f1a1f006c9ceb1a687";
 
-    const REDIRECT_URI = "http://127.0.0.1:5500/callback.html";
+    const REDIRECT_URI = "https://port-two-kohl.vercel.app/callback.html";
 
     const SCOPES = "user-read-currently-playing user-read-recently-played";
 
