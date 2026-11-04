@@ -2275,34 +2275,120 @@ body,
     visibility: hidden;
 }
 
-/* Light theme */
 
-[data-theme="light"] .contribution-cell.level-0 {
-    background: #EED9E7;
+
+
+
+/* Light theme — visible dusty plum heatmap */
+
+html[data-theme="light"] .contribution-cell.level-0 {
+    background: #D2B8D0;
 }
 
-[data-theme="light"] .contribution-cell.level-1 {
-    background: #DFC1D5;
+html[data-theme="light"] .contribution-cell.level-1 {
+    background: #C19BC2;
 }
 
-[data-theme="light"] .contribution-cell.level-2 {
-    background: #C99BB9;
+html[data-theme="light"] .contribution-cell.level-2 {
+    background: #A77EAE;
 }
 
-[data-theme="light"] .contribution-cell.level-3 {
-    background: #A87598;
+html[data-theme="light"] .contribution-cell.level-3 {
+    background: #896093;
 }
 
-[data-theme="light"] .contribution-cell.level-4 {
-    background: #75566C;
+html[data-theme="light"] .contribution-cell.level-4 {
+    background: #60416F;
 }
 
-.contribution-cell:not(.empty) {
-    cursor: default;
-    transition: outline-color 0.15s ease;
+/* Matching legend */
+
+html[data-theme="light"] .legend-cell.level-1 {
+    background: #C19BC2;
 }
 
-.contribution-cell:not(.empty):hover {
-    outline: 1px solid var(--text-primary);
-    outline-offset: 1px;
+html[data-theme="light"] .legend-cell.level-2 {
+    background: #A77EAE;
 }
+
+html[data-theme="light"] .legend-cell.level-3 {
+    background: #896093;
+}
+
+html[data-theme="light"] .legend-cell.level-4 {
+    background: #60416F;
+}
+
+
+/* Dark theme — monochrome GitHub heatmap */
+
+html[data-theme="dark"] .contribution-cell.level-0 {
+    background: #202020;
+}
+
+html[data-theme="dark"] .contribution-cell.level-1 {
+    background: #535353;
+}
+
+html[data-theme="dark"] .contribution-cell.level-2 {
+    background: #8B8B8B;
+}
+
+html[data-theme="dark"] .contribution-cell.level-3 {
+    background: #A6A6A6;
+}
+
+html[data-theme="dark"] .contribution-cell.level-4 {
+    background: #EAEAEA;
+}
+
+/* Matching dark-theme legend */
+
+html[data-theme="dark"] .legend-cell.level-1 {
+    background: #535353;
+}
+
+html[data-theme="dark"] .legend-cell.level-2 {
+    background: #8B8B8B;
+}
+
+html[data-theme="dark"] .legend-cell.level-3 {
+    background: #A6A6A6;
+}
+
+html[data-theme="dark"] .legend-cell.level-4 {
+    background: #EAEAEA;
+}
+
+/* =================================
+   GITHUB CALENDAR SCROLL ANIMATION
+================================= */
+
+.github-graph.github-graph-loaded .contribution-cell {
+    opacity: 0;
+    transform: translateX(-8px);
+
+    transition:
+        opacity 350ms ease,
+        transform 350ms ease;
+
+    transition-delay: calc(var(--cell-index, 0) * 4ms);
+}
+
+.github-graph.github-graph-loaded.is-visible .contribution-cell {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Accessibility: respect reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+    .github-graph.github-graph-loaded .contribution-cell {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+
+

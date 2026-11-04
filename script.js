@@ -1007,8 +1007,9 @@ async function fetchGithubContributions() {
             months.appendChild(label);
         });
 
-        calendarDays.forEach(day => {
+        calendarDays.forEach((day, index) => {
             const cell = document.createElement("span");
+            cell.style.setProperty("--cell-index", index);
 
             if (!day) {
                 cell.className = "contribution-cell empty";
@@ -1039,3 +1040,30 @@ async function fetchGithubContributions() {
 
 fetchGithubContributions();
 
+// =================================
+// GITHUB CALENDAR SCROLL REVEAL
+// =================================
+
+const contributionGraph = document.getElementById("github-graph");
+
+if (contributionGraph) {
+    if ("IntersectionObserver" in window) {
+        const calendarObserver = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        contributionGraph.classList.add("is-visible");
+                        calendarObserver.unobserve(contributionGraph);
+                    }
+                });
+            },
+            {
+                threshold: 0.15
+            }
+        );
+
+        calendarObserver.observe(contributionGraph);
+    } else {
+        contributionGraph.classList.add("is-visible");
+    }
+}
