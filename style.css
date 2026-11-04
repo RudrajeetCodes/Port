@@ -1943,6 +1943,127 @@ body,
     text-align: center;
 }
 
+/* ==============================
+   FLOATING SECTION NAVIGATION
+============================== */
+
+.floating-nav {
+    position: fixed;
+
+    top: 50%;
+    left: calc(50% + 437.5px + (100vw - 875px) / 4);
+    right: auto;
+
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    padding: 10px;
+
+    background: transparent;
+    border: none;
+    border-radius: 0;
+
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    box-shadow: none;
+}
+
+/* Navigation links */
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 9px 11px;
+
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+
+    opacity: 0.45;
+
+    border-radius: 7px;
+
+    transition:
+        opacity 0.2s ease,
+        color 0.2s ease,
+        background 0.2s ease;
+}
+
+/* Hover */
+
+.nav-item:hover {
+    color: var(--text-primary);
+    opacity: 0.8;
+    background: transparent;
+}
+
+/* Active section */
+
+.nav-item.active {
+    color: var(--text-primary);
+    opacity: 1;
+    background: transparent;
+}
+
+/* Navigation arrow */
+
+.nav-arrow {
+    width: 12px;
+    opacity: 0;
+    transform: translateX(-5px);
+
+    color: var(--accent);
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.nav-item.active .nav-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Light theme */
+
+[data-theme="light"] .floating-nav {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+[data-theme="light"] .nav-item {
+    opacity: 0.45;
+}
+
+[data-theme="light"] .nav-item:hover {
+    color: var(--text-primary);
+    opacity: 0.8;
+    background: transparent;
+}
+
+[data-theme="light"] .nav-item.active {
+    color: var(--text-primary);
+    opacity: 1;
+    background: transparent;
+}
+
+[data-theme="light"] .nav-arrow {
+    color: var(--accent);
+}
+
+
+
+
+
 
 
 

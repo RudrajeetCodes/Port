@@ -489,3 +489,67 @@ showMoreButton.addEventListener("click", () => {
 });
 
 renderGithubActivity();
+
+// =================================
+// FLOATING NAVIGATION
+// =================================
+
+const navItems = document.querySelectorAll(".nav-item");
+
+const navSections = [
+    "home",
+    "experience",
+    "projects",
+    "about",
+    "dev-stats"
+].map(id => document.getElementById(id)).filter(Boolean);
+
+// Smooth navigation
+
+navItems.forEach(item => {
+    item.addEventListener("click", event => {
+        event.preventDefault();
+
+        const target = document.getElementById(item.dataset.section);
+
+        if (target) {
+            target.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    });
+});
+
+/// Detect current section
+
+function updateActiveSection() {
+    const activationPoint = window.innerHeight * 0.4;
+
+    let activeSection = navSections[0];
+
+    navSections.forEach(section => {
+        const sectionTop = section.getBoundingClientRect().top;
+
+        if (sectionTop <= activationPoint) {
+            activeSection = section;
+        }
+    });
+
+    if (!activeSection) return;
+
+    navItems.forEach(item => {
+        const isActive = item.dataset.section === activeSection.id;
+
+        item.classList.toggle("active", isActive);
+        item.setAttribute("aria-current", isActive ? "location" : "false");
+    });
+}
+
+window.addEventListener("scroll", updateActiveSection, {
+    passive: true
+});
+
+window.addEventListener("resize", updateActiveSection);
+
+updateActiveSection();
