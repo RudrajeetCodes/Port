@@ -352,20 +352,8 @@
     // =================================
 
     function initializeMusicCard() {
-        const action = document.getElementById("spotifyAction");
-
-        if (!action) {
-            return;
-        }
-
-        action.addEventListener("click", async (event) => {
-            if (!localStorage.getItem(STORAGE.accessToken)) {
-                event.preventDefault();
-                await login();
-            }
-        });
-
         loadCurrentlyPlaying();
+
         setInterval(loadCurrentlyPlaying, 15000);
     }
 
@@ -379,28 +367,28 @@
         if (!trackName || !artistName) return;
 
         try {
-            // First, check whether Spotify is actively playing.
-            let item = await getCurrentlyPlaying();
-            let isCurrentlyPlaying = Boolean(item);
+            const response = await fetch("/api/spotify");
 
-            // If not playing, fall back to listening history.
-            if (!item) {
-                item = await getRecentlyPlayed();
+            if (!response.ok) {
+                throw new Error(`Spotify API error: ${response.status}`);
             }
+
+            const data = await response.json();
+            const item = data.track;
 
             if (!item) {
                 trackName.textContent = "Nothing played yet";
                 artistName.textContent = "Play something on Spotify";
+
                 if (label) label.textContent = "LAST PLAYED";
+
                 return;
             }
 
-            // Update the card with the selected track.
             updateMusicCard(item);
 
-            // Change the label depending on the source.
             if (label) {
-                label.textContent = isCurrentlyPlaying
+                label.textContent = data.isPlaying
                     ? "NOW PLAYING"
                     : "LAST PLAYED";
             }
