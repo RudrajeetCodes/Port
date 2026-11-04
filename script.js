@@ -665,6 +665,79 @@ fetchGithubActivity();
 
 
 // =================================
+// WEEKLY DEVELOPER STATS
+// =================================
+
+async function fetchWeeklyDevStats() {
+    const codingTimeElement = document.getElementById("wakatime-weekly-time");
+    const commitsElement = document.getElementById("github-weekly-commits");
+    const projectElement = document.getElementById("github-most-worked-project");
+    const latestElement = document.getElementById("github-latest-commit");
+
+    const [wakatimeResult, githubResult] = await Promise.allSettled([
+        fetch("https://port-two-kohl.vercel.app/api/wakatime"),
+        fetch("https://port-two-kohl.vercel.app/api/github-weekly")
+    ]);
+
+    // WakaTime weekly coding time
+    try {
+        if (wakatimeResult.status === "fulfilled" && wakatimeResult.value.ok) {
+            const data = await wakatimeResult.value.json();
+
+            if (codingTimeElement) {
+                codingTimeElement.textContent = data.text || "--h --m";
+            }
+        } else {
+            throw new Error("WakaTime request failed");
+        }
+    } catch (error) {
+        console.error("Weekly coding stats error:", error);
+
+        if (codingTimeElement) {
+            codingTimeElement.textContent = "Unavailable";
+        }
+    }
+
+    // GitHub weekly statistics
+    try {
+        if (githubResult.status !== "fulfilled" || !githubResult.value.ok) {
+            throw new Error("GitHub weekly request failed");
+        }
+
+        const data = await githubResult.value.json();
+
+        if (commitsElement) {
+            commitsElement.textContent = data.weeklyCommits ?? "--";
+        }
+
+        if (projectElement) {
+            projectElement.textContent = data.mostWorkedProject || "No commits yet";
+        }
+
+        if (latestElement) {
+            latestElement.textContent = data.latestCommit
+                ? `> ${data.latestCommit.message}`
+                : "> No commits this week";
+
+            latestElement.title = data.latestCommit
+                ? `${data.latestCommit.repo} · ${data.latestCommit.date}`
+                : "";
+        }
+
+    } catch (error) {
+        console.error("Weekly GitHub stats error:", error);
+
+        if (commitsElement) commitsElement.textContent = "--";
+        if (projectElement) projectElement.textContent = "Unavailable";
+        if (latestElement) latestElement.textContent = "> Unable to load latest commit";
+    }
+}
+
+fetchWeeklyDevStats();
+
+
+
+// =================================
 // FLOATING NAVIGATION
 // =================================
 
