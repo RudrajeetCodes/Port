@@ -73,8 +73,43 @@ export default async function handler(req, res) {
 
         const data = Object.fromEntries(results);
 
+
+        // Fetch accurate rolling-year contribution statistics
+        const graphqlResponse = await fetch("https://api.github.com/graphql", {
+            method: "POST",
+            headers,
+            body: JSON.stringify({
+                query: `
+                    query {
+                        user(login: "RudrajeetCodes") {
+                            contributionsCollection {
+                                totalCommitContributions
+                                contributionCalendar {
+                                    totalContributions
+                                }
+                            }
+                        }
+                    }
+                `
+            })
+        });
+
+        if (!graphqlResponse.ok) {
+            throw new Error(`GitHub GraphQL error (${graphqlResponse.status})`);
+        }
+
+        const graphqlResult = await graphqlResponse.json();
+
+        if (graphqlResult.errors?.length || !graphqlResult.data?.user) {
+            throw new Error("Unable to fetch GitHub contribution statistics");
+        }
+
+        const contributionStats =
+            graphqlResult.data.user.contributionsCollection;
+
+
         const counts = {
-            commits: data.commits.total_count,
+            commits: contributionStats.totalCommitContributions,
             merged: data.merged.total_count,
             open: data.open.total_count,
             closed: data.closed.total_count
@@ -110,6 +145,7 @@ export default async function handler(req, res) {
         return res.status(200).json({
             username: GITHUB_USERNAME,
             counts,
+            contributions: contributionStats.contributionCalendar.totalContributions,
             items,
             page,
             hasMore: items.length === 100
