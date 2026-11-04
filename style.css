@@ -1572,8 +1572,8 @@ body,
 }
 
 .coding-stat:nth-child(3) {
-    align-items: center;
-    text-align: center;
+    align-items: flex-end;
+    text-align: right;
 }
 
 .coding-stat strong,
@@ -1585,8 +1585,23 @@ body,
     overflow-wrap: anywhere;
 }
 
-.coding-stat:nth-child(3) strong {
+.coding-project-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 9px;
+    width: max-content;
+    max-width: 100%;
+}
+
+.coding-project-stat .activity-label {
+    text-align: right;
+}
+
+.coding-project-stat strong {
+    text-align: center;
     font-size: 13px;
+    overflow-wrap: anywhere;
 }
 
 .coding-commit {

@@ -715,12 +715,14 @@ async function fetchWeeklyDevStats() {
         }
 
         if (latestElement) {
-            latestElement.textContent = data.latestCommit
-                ? `> ${data.latestCommit.message}`
+            const latest = data.latestCommit;
+
+            latestElement.textContent = latest
+                ? `> ${latest.message} · ${latest.repo.split("/").pop()}`
                 : "> No commits this week";
 
-            latestElement.title = data.latestCommit
-                ? `${data.latestCommit.repo} · ${data.latestCommit.date}`
+            latestElement.title = latest
+                ? `${latest.repo} · ${latest.date}`
                 : "";
         }
 
