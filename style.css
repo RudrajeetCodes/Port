@@ -2391,4 +2391,30 @@ html[data-theme="dark"] .legend-cell.level-4 {
 }
 
 
+/* =================================
+   QUOTE ROTATION ANIMATION
+================================= */
 
+.quote-card blockquote,
+.quote-card .quote-author {
+    opacity: 1;
+    transform: translateY(0);
+
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
+}
+
+.quote-card.changing blockquote,
+.quote-card.changing .quote-author {
+    opacity: 0;
+    transform: translateY(5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .quote-card blockquote,
+    .quote-card .quote-author {
+        transition: none;
+    }
+}

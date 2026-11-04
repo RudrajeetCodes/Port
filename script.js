@@ -1067,3 +1067,134 @@ if (contributionGraph) {
         contributionGraph.classList.add("is-visible");
     }
 }
+
+
+const quotes = [
+    {
+        text: '"Always be hustlin\'.',
+        author: "~ Travis Kalanick"
+    },
+    {
+        text: '"The only way to do great work is to love what you do."',
+        author: "~ Steve Jobs"
+    },
+    {
+        text: '"Stay hungry. Stay foolish."',
+        author: "~ Steve Jobs"
+    },
+    {
+        text: '"Talk is cheap. Show me the code."',
+        author: "~ Linus Torvalds"
+    },
+    {
+        text: '"First, solve the problem. Then, write the code."',
+        author: "~ John Johnson"
+    },
+    {
+        text: '"Make it work, make it right, make it fast."',
+        author: "~ Kent Beck"
+    },
+    {
+        text: '"Programs must be written for people to read."',
+        author: "~ Harold Abelson"
+    },
+    {
+        text: '"Simplicity is the soul of efficiency."',
+        author: "~ Austin Freeman"
+    },
+    {
+        text: '"The best code is no code at all."',
+        author: "~ Jeff Atwood"
+    },
+    {
+        text: '"Any fool can write code that a computer can understand."',
+        author: "~ Martin Fowler"
+    },
+    {
+        text: '"It works on my machine."',
+        author: "~ Every Developer"
+    },
+    {
+        text: '"What is broken is broken."',
+        author: "~ Unknown"
+    },
+
+    // Anime
+    {
+        text: '"Whatever you lose, you\'ll find it again."',
+        author: "~ Kenshin Himura"
+    },
+    {
+        text: '"A lesson without pain is meaningless."',
+        author: "~ Edward Elric"
+    },
+    {
+        text: '"The world isn\'t perfect. But it\'s there for us."',
+        author: "~ Roy Mustang"
+    },
+    {
+        text: '"If you don\'t take risks, you can\'t create a future."',
+        author: "~ Monkey D. Luffy"
+    },
+    {
+        text: '"Whatever you do, enjoy it."',
+        author: "~ Gintoki Sakata"
+    },
+    {
+        text: '"Hard work is worthless for those that don\'t believe in themselves."',
+        author: "~ Naruto Uzumaki"
+    },
+    {
+        text: '"The future is not something we enter. The future is something we create."',
+        author: "~ Makoto Shishio"
+    },
+    {
+        text: '"I\'m not going to run away anymore."',
+        author: "~ Shinji Ikari"
+    }
+];
+
+const QUOTE_INTERVAL = 5000;
+
+const quoteCard = document.querySelector(".quote-card");
+const quoteText = document.getElementById("quote-text");
+const quoteAuthor = document.getElementById("quote-author");
+
+let quoteIndex = 0;
+let quoteTimer = null;
+
+function changeQuote() {
+    if (!quoteCard || !quoteText || !quoteAuthor) return;
+
+    quoteCard.classList.add("changing");
+
+    setTimeout(() => {
+        quoteIndex = (quoteIndex + 1) % quotes.length;
+
+        quoteText.textContent = quotes[quoteIndex].text;
+        quoteAuthor.textContent = quotes[quoteIndex].author;
+
+        quoteCard.classList.remove("changing");
+    }, 350);
+}
+
+function startQuoteRotation() {
+    if (quoteTimer || document.hidden) return;
+
+    quoteTimer = setInterval(changeQuote, QUOTE_INTERVAL);
+}
+
+function stopQuoteRotation() {
+    clearInterval(quoteTimer);
+    quoteTimer = null;
+}
+
+startQuoteRotation();
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        stopQuoteRotation();
+    } else {
+        startQuoteRotation();
+    }
+});
