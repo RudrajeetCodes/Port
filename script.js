@@ -559,9 +559,10 @@ async function fetchGithubActivity(page = 1, append = false) {
 function renderGithubActivity() {
     if (!activityList) return;
 
-    const visibleActivity = showAllActivity
-        ? githubActivity
-        : githubActivity.slice(0, 4);
+    const visibleActivity = githubActivity.slice(
+        0,
+        showAllActivity ? 10 : 4
+    );
 
     if (githubActivity.length === 0) {
         activityList.innerHTML = `
@@ -622,13 +623,9 @@ function renderGithubActivity() {
 
     showMoreButton.hidden = false;
 
-    if (!showAllActivity) {
-        showMoreButton.textContent = "Show more";
-    } else if (activityHasMore) {
-        showMoreButton.textContent = "Load more";
-    } else {
-        showMoreButton.textContent = "Show less";
-    }
+    showMoreButton.textContent = showAllActivity
+        ? "Show less"
+        : "Show more";
 }
 
 // Tab switching
@@ -653,23 +650,12 @@ activityTabs.forEach(tab => {
     });
 });
 
-// Show more / load more / show less
+// Show more / show less
 if (showMoreButton) {
-    showMoreButton.addEventListener("click", async () => {
+    showMoreButton.addEventListener("click", () => {
         if (activityLoading) return;
 
-        if (!showAllActivity) {
-            showAllActivity = true;
-            renderGithubActivity();
-            return;
-        }
-
-        if (activityHasMore) {
-            await fetchGithubActivity(currentActivityPage + 1, true);
-            return;
-        }
-
-        showAllActivity = false;
+        showAllActivity = !showAllActivity;
         renderGithubActivity();
     });
 }
