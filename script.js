@@ -59,6 +59,41 @@ setInterval(updateLocalTime, 1000);
 const themeToggle = document.getElementById("themeToggle");
 const html = document.documentElement;
 
+// =================================
+// THEME SWITCH SOUND
+// =================================
+
+function playThemeSound(theme) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+
+    const audio = new AudioContext();
+
+    const oscillator = audio.createOscillator();
+    const gain = audio.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(audio.destination);
+
+    const now = audio.currentTime;
+
+    // Different pitch for each theme
+    oscillator.frequency.setValueAtTime(
+        theme === "dark" ? 420 : 620,
+        now
+    );
+
+    oscillator.type = "sine";
+
+    gain.gain.setValueAtTime(0.035, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+
+    oscillator.start(now);
+    oscillator.stop(now + 0.14);
+
+    oscillator.onended = () => audio.close();
+}
+
 // Load saved theme, default to dark
 const savedTheme = localStorage.getItem("theme") || "dark";
 
@@ -96,7 +131,10 @@ setTheme(savedTheme);
 // Toggle theme on click
 themeToggle.addEventListener("click", () => {
     const currentTheme = html.getAttribute("data-theme");
-    setTheme(currentTheme === "dark" ? "light" : "dark");
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+    setTheme(newTheme);
+    playThemeSound(newTheme);
 });
 
 // =================================
