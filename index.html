@@ -537,22 +537,25 @@
             <div class="profile-activity">
 
                 <!-- LAST PLAYED -->
+                <div class="activity-card music-card" id="spotifyMusicCard">
 
-                <div class="activity-card music-card">
-
-                    <div class="activity-artwork">
-                        <i data-lucide="disc-3"></i>
+                    <div class="activity-artwork" id="spotifyArtwork">
+                        <i data-lucide="disc-3" id="spotifyFallbackIcon"></i>
+                        <img id="spotifyAlbumArt" src="" alt="Album artwork" hidden>
                     </div>
 
                     <div class="activity-content">
                         <span class="activity-label">LAST PLAYED</span>
-                        <h3 class="activity-title">Song Name</h3>
-                        <p class="activity-subtitle">Song Author</p>
+                        <h3 class="activity-title" id="spotifyTrackName">Connect Spotify</h3>
+                        <p class="activity-subtitle" id="spotifyArtistName">
+                            Click the arrow to connect
+                        </p>
                     </div>
 
-                    <span class="activity-action" aria-hidden="true">
-                        <i data-lucide="play"></i>
-                    </span>
+                    <a href="#" class="activity-action" id="spotifyAction" aria-label="Connect Spotify"
+                        title="Connect Spotify">
+                        <i data-lucide="play" id="spotifyActionIcon"></i>
+                    </a>
 
                 </div>
 
@@ -807,6 +810,7 @@
     </script>
 
     <script src="script.js"></script>
+    <script src="spotify.js"></script>
 
 </body>
 
