@@ -192,7 +192,7 @@ document.querySelectorAll(".experience-item").forEach((item) => {
 // =================================
 
 const revealElements = document.querySelectorAll(
-    ".tech-section, .experience-section, .projects-section, .about-section, .dev-stats-section"
+    ".tech-section, .experience-section, .projects-section, .about-section, .dev-stats-section, .quote-section"
 );
 
 const revealObserver = new IntersectionObserver(
@@ -374,3 +374,118 @@ function renderProjects() {
 }
 
 renderProjects();
+
+// =================================
+// GITHUB COMMIT ACTIVITY
+// =================================
+
+const githubActivity = [
+    {
+        message: "Add Dev Stats section and theme-aware contribution legend",
+        repo: "Port",
+        date: "Nov 4, 2026",
+        type: "commits"
+    },
+    {
+        message: "Add About section and refine theme styling",
+        repo: "Port",
+        date: "Nov 4, 2026",
+        type: "commits"
+    },
+    {
+        message: "style: refine light theme with cool pink palette",
+        repo: "Port",
+        date: "Nov 4, 2026",
+        type: "commits"
+    },
+    {
+        message: "feat: add projects section and improve portfolio UI",
+        repo: "Port",
+        date: "Nov 3, 2026",
+        type: "commits"
+    },
+    {
+        message: "Build portfolio experience section and animations",
+        repo: "Port",
+        date: "Nov 3, 2026",
+        type: "commits"
+    }
+];
+
+const activityList = document.getElementById("github-activity-list");
+const activityTabs = document.querySelectorAll(".activity-tab");
+const showMoreButton = document.getElementById("activity-show-more");
+
+let activeActivityFilter = "commits";
+let showAllActivity = false;
+
+function renderGithubActivity() {
+    if (!activityList) return;
+
+    const filteredActivity = githubActivity.filter(
+        activity => activity.type === activeActivityFilter
+    );
+
+    const visibleActivity = showAllActivity
+        ? filteredActivity
+        : filteredActivity.slice(0, 4);
+
+    if (filteredActivity.length === 0) {
+        activityList.innerHTML = `
+            <div class="github-activity-empty">
+                No ${activeActivityFilter} activity to show.
+            </div>
+        `;
+    } else {
+        activityList.innerHTML = visibleActivity.map(activity => `
+            <div class="github-activity-item">
+
+                <span class="activity-commit-icon" aria-hidden="true">⌘</span>
+
+                <span class="activity-commit-message" title="${activity.message}">
+                    ${activity.message}
+                </span>
+
+                <span class="activity-commit-repo">
+                    ${activity.repo}
+                </span>
+
+                <span class="activity-commit-date">
+                    ${activity.date}
+                </span>
+
+            </div>
+        `).join("");
+    }
+
+    showMoreButton.hidden = filteredActivity.length <= 4;
+    showMoreButton.textContent = showAllActivity ? "Show less" : "Show more";
+}
+
+// Tab switching
+
+activityTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+        activityTabs.forEach(item => {
+            item.classList.remove("active");
+            item.setAttribute("aria-selected", "false");
+        });
+
+        tab.classList.add("active");
+        tab.setAttribute("aria-selected", "true");
+
+        activeActivityFilter = tab.dataset.filter;
+        showAllActivity = false;
+
+        renderGithubActivity();
+    });
+});
+
+// Show more / less
+
+showMoreButton.addEventListener("click", () => {
+    showAllActivity = !showAllActivity;
+    renderGithubActivity();
+});
+
+renderGithubActivity();
