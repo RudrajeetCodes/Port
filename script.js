@@ -192,7 +192,7 @@ document.querySelectorAll(".experience-item").forEach((item) => {
 // =================================
 
 const revealElements = document.querySelectorAll(
-    ".tech-section, .experience-section, .projects-section, .about-section"
+    ".tech-section, .experience-section, .projects-section, .about-section, .dev-stats-section"
 );
 
 const revealObserver = new IntersectionObserver(
