@@ -524,7 +524,10 @@ async function fetchGithubActivity(page = 1, append = false) {
 
         const data = await response.json();
 
-        activityCounts = data.counts || {};
+        activityCounts = {
+            ...activityCounts,
+            [activeActivityFilter]: data.counts?.[activeActivityFilter] ?? null
+        };
         activityHasMore = Boolean(data.hasMore);
         currentActivityPage = data.page || page;
 
@@ -911,7 +914,7 @@ async function fetchGithubContributions() {
 
     try {
         const response = await fetch(
-            "https://port-two-kohl.vercel.app/api/github?type=commits"
+            "https://port-two-kohl.vercel.app/api/github-contributions"
         );
 
         if (!response.ok) {

@@ -47,7 +47,10 @@ export default async function handler(req, res) {
         });
     }
 
-    const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
+    const page = Math.max(
+        1,
+        Number.parseInt(req.query.page, 10) || 1
+    );
 
     const headers = {
         Accept: "application/vnd.github+json",
@@ -55,127 +58,33 @@ export default async function handler(req, res) {
         "X-GitHub-Api-Version": "2022-11-28"
     };
 
-
     try {
-        // Run the four searches independently.
-        const searchEntries = Object.entries(SEARCH_QUERIES);
-
-        const searchResults = await Promise.allSettled(
-            searchEntries.map(async ([key, query]) => {
-                const params = new URLSearchParams({
-                    q: query,
-                    per_page: key === type ? "100" : "1",
-                    page: key === type ? String(page) : "1",
-                    sort: key === "commits" ? "committer-date" : "updated",
-                    order: "desc"
-                });
-
-                const endpoint = key === "commits" ? "commits" : "issues";
-
-                const response = await fetch(
-                    `${GITHUB_API}/search/${endpoint}?${params}`,
-                    { headers }
-                );
-
-                if (!response.ok) {
-                    const details = await response.text();
-
-                    throw new Error(
-                        `${key} search failed (${response.status}): ${details}`
-                    );
-                }
-
-                return await response.json();
-            })
-        );
-
-        const data = {};
-
-        searchResults.forEach((result, index) => {
-            const key = searchEntries[index][0];
-
-            if (result.status === "fulfilled") {
-                data[key] = result.value;
-            } else {
-                console.error(
-                    `GitHub ${key} search failed:`,
-                    result.reason
-                );
-
-                // Only the requested activity category is essential.
-                if (key === type) {
-                    throw result.reason;
-                }
-            }
+        const params = new URLSearchParams({
+            q: SEARCH_QUERIES[type],
+            per_page: "100",
+            page: String(page),
+            sort: type === "commits" ? "committer-date" : "updated",
+            order: "desc"
         });
 
-        // Fetch contribution statistics independently.
-        let contributionStats = null;
+        const endpoint = type === "commits" ? "commits" : "issues";
 
-        try {
-            const graphqlResponse = await fetch(
-                `${GITHUB_API}/graphql`,
-                {
-                    method: "POST",
-                    headers,
-                    body: JSON.stringify({
-                        query: `
-                            query {
-                                user(login: "RudrajeetCodes") {
-                                    contributionsCollection {
-                                        totalCommitContributions
-                                        contributionCalendar {
-                                            totalContributions
-                                            weeks{
-                                                contributionDays{
-                                                    contributionCount
-                                                    date
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        `
-                    })
-                }
+        const response = await fetch(
+            `${GITHUB_API}/search/${endpoint}?${params}`,
+            { headers }
+        );
+
+        if (!response.ok) {
+            const details = await response.text();
+
+            throw new Error(
+                `${type} search failed (${response.status}): ${details}`
             );
-
-            if (!graphqlResponse.ok) {
-                throw new Error(
-                    `GraphQL error (${graphqlResponse.status}): ${await graphqlResponse.text()
-                    }`
-                );
-            }
-
-            const graphqlResult = await graphqlResponse.json();
-
-            if (graphqlResult.errors?.length || !graphqlResult.data?.user) {
-                throw new Error(
-                    JSON.stringify(graphqlResult.errors || "Missing user data")
-                );
-            }
-
-            contributionStats =
-                graphqlResult.data.user.contributionsCollection;
-
-        } catch (error) {
-            console.error("GitHub contribution statistics failed:", error);
         }
 
-        // Use GraphQL counts when available, otherwise fall back to Search API.
-        const counts = {
-            commits:
-                contributionStats?.totalCommitContributions ??
-                data.commits?.total_count ??
-                null,
+        const data = await response.json();
 
-            merged: data.merged?.total_count ?? null,
-            open: data.open?.total_count ?? null,
-            closed: data.closed?.total_count ?? null
-        };
-
-        const items = data[type].items.map(item => {
+        const items = data.items.map(item => {
             if (type === "commits") {
                 return {
                     type: "commits",
@@ -202,7 +111,14 @@ export default async function handler(req, res) {
             };
         });
 
-        // Cache successful responses at Vercel's edge.
+        const counts = {
+            commits: null,
+            merged: null,
+            open: null,
+            closed: null,
+            [type]: data.total_count
+        };
+
         res.setHeader(
             "Cache-Control",
             "public, s-maxage=60, stale-while-revalidate=300"
@@ -211,13 +127,6 @@ export default async function handler(req, res) {
         return res.status(200).json({
             username: GITHUB_USERNAME,
             counts,
-            contributions:
-                contributionStats?.contributionCalendar?.totalContributions ?? null,
-
-            contributionDays:
-                contributionStats?.contributionCalendar?.weeks
-                    ?.flatMap(week => week.contributionDays) ?? [],
-
             items,
             page,
             hasMore: items.length === 100
@@ -232,5 +141,4 @@ export default async function handler(req, res) {
             error: "Unable to fetch GitHub activity"
         });
     }
-
 }
