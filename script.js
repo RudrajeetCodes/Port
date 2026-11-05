@@ -1224,6 +1224,8 @@ document.addEventListener("visibilitychange", () => {
     let animationFrame;
 
     const STAR_COUNT = 65;
+    let previousTime = 0;
+    let sideBounds = { left: 0, right: 0 };
 
 
     function createStars() {
@@ -1236,8 +1238,11 @@ document.addEventListener("visibilitychange", () => {
         const rect = container.getBoundingClientRect();
 
         // Keep stars outside the main content, with a 20px buffer.
-        const leftBoundary = Math.max(0, rect.left - 20);
-        const rightBoundary = Math.min(width, rect.right + 20);
+        sideBounds.left = Math.max(0, rect.left - 20);
+        sideBounds.right = Math.min(width, rect.right + 20);
+
+        const leftBoundary = sideBounds.left;
+        const rightBoundary = sideBounds.right;
 
         const leftWidth = leftBoundary;
         const rightWidth = width - rightBoundary;
@@ -1258,9 +1263,19 @@ document.addEventListener("visibilitychange", () => {
                 y: Math.random() * height,
                 radius: Math.random() * 1.2 + 0.5,
                 opacity: Math.random() * 0.55 + 0.2,
+
+                // Dark theme star properties
                 speed: Math.random() * 0.002 + 0.001,
-                phase: Math.random() * Math.PI * 2,
-                glow: Math.random() * 8 + 4
+                glow: Math.random() * 8 + 4,
+
+                // Light theme sakura properties
+                baseX: x,
+                side: leftSide ? "left" : "right",
+                sway: Math.random() * 18 + 8,
+                fallSpeed: Math.random() * 0.035 + 0.018,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 0.002,
+                phase: Math.random() * Math.PI * 2
             });
         }
     }
@@ -1285,38 +1300,85 @@ document.addEventListener("visibilitychange", () => {
         const isLight =
             document.documentElement.dataset.theme === "light";
 
-        stars.forEach(star => {
-            const twinkle =
-                (Math.sin(time * star.speed + star.phase) + 1) / 2;
+        const deltaTime = Math.min(time - (previousTime || time), 32);
+        previousTime = time;
 
-            const alpha = star.opacity * (0.35 + twinkle * 0.65);
+        stars.forEach(particle => {
+            if (isLight) {
+                // SAKURA PETALS — LIGHT THEME
+                particle.y += particle.fallSpeed * deltaTime;
+                particle.rotation += particle.rotationSpeed * deltaTime;
 
-            const color = isLight
-                ? `rgba(137, 96, 147, ${alpha})`
-                : `rgba(220, 225, 255, ${alpha})`;
+                if (particle.y > height + 20) {
+                    particle.y = -20;
+                    particle.baseX = particle.side === "left"
+                        ? Math.random() * Math.max(0, sideBounds.left)
+                        : sideBounds.right + Math.random() *
+                        Math.max(0, width - sideBounds.right);
+                }
 
-            ctx.beginPath();
+                let x = particle.baseX +
+                    Math.sin(time * 0.0007 + particle.phase) * particle.sway;
 
-            ctx.shadowBlur = star.glow;
-            ctx.shadowColor = color;
-            ctx.fillStyle = color;
+                // Keep petals strictly outside the main container.
+                if (particle.side === "left") {
+                    x = Math.min(x, sideBounds.left - 5);
+                } else {
+                    x = Math.max(x, sideBounds.right + 5);
+                }
 
-            ctx.arc(
-                star.x,
-                star.y,
-                star.radius,
-                0,
-                Math.PI * 2
-            );
+                const color = Math.random() > 0.82
+                    ? `rgba(205, 139, 184, ${particle.opacity})`
+                    : `rgba(174, 148, 205, ${particle.opacity})`;
 
-            ctx.fill();
+                ctx.save();
+                ctx.translate(x, particle.y);
+                ctx.rotate(particle.rotation);
+
+                ctx.fillStyle = color;
+                ctx.shadowBlur = 9;
+                ctx.shadowColor = color;
+
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-2, -3, -5, 1, 0, 5);
+                ctx.bezierCurveTo(5, 1, 2, -3, 0, 0);
+                ctx.fill();
+
+                ctx.restore();
+
+            } else {
+                // STARFIELD — DARK THEME
+                const twinkle =
+                    (Math.sin(time * particle.speed + particle.phase) + 1) / 2;
+
+                const alpha =
+                    particle.opacity * (0.35 + twinkle * 0.65);
+
+                const color = `rgba(220, 225, 255, ${alpha})`;
+
+                ctx.beginPath();
+                ctx.shadowBlur = particle.glow;
+                ctx.shadowColor = color;
+                ctx.fillStyle = color;
+
+                ctx.arc(
+                    particle.x,
+                    particle.y,
+                    particle.radius,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fill();
+            }
         });
 
         ctx.shadowBlur = 0;
-
         animationFrame = requestAnimationFrame(animate);
     }
 
+    // Initialize canvas and start animation
     resizeCanvas();
 
     window.addEventListener("resize", resizeCanvas);
@@ -1324,4 +1386,5 @@ document.addEventListener("visibilitychange", () => {
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         animationFrame = requestAnimationFrame(animate);
     }
+
 })();
