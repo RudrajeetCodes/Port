@@ -977,7 +977,7 @@ body,
 .projects-heading {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 26px;
 }
 
@@ -989,7 +989,7 @@ body,
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    margin-top: 8px;
+    margin-top: 0px;
 
     color: var(--text-muted);
     font-size: 11px;
@@ -1002,9 +1002,11 @@ body,
     color: var(--text-primary);
 }
 
-.projects-github-link i {
-    width: 13px;
-    height: 13px;
+.projects-github-link svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 1.8;
+    flex-shrink: 0;
 }
 
 /* Grid */
@@ -1562,26 +1564,14 @@ body,
 .coding-stat {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: 9px;
     min-width: 0;
 }
 
 
-.coding-stat:nth-child(2) {
-    position: static;
-    transform: none;
-    grid-column: 2;
-    justify-self: stretch;
-    align-items: center;
-    text-align: center;
-}
 
-
-
-.coding-stat:nth-child(3) {
-    align-items: flex-end;
-    text-align: right;
-}
 
 .coding-stat strong,
 .coding-commit strong {
@@ -1595,14 +1585,14 @@ body,
 .coding-project-stat {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     gap: 9px;
-    width: max-content;
+    width: 100%;
     max-width: 100%;
 }
 
 .coding-project-stat .activity-label {
-    text-align: right;
+    text-align: center;
 }
 
 .coding-project-stat strong {
@@ -2098,19 +2088,22 @@ body,
 }
 
 [data-theme="light"] .nav-item {
-    opacity: 0.45;
+    opacity: 0.75;
+    color: var(--text-secondary);
 }
 
 [data-theme="light"] .nav-item:hover {
     color: var(--text-primary);
-    opacity: 0.8;
-    background: transparent;
+    opacity: 1;
+    background: #F0D7E6;
 }
 
 [data-theme="light"] .nav-item.active {
     color: var(--text-primary);
     opacity: 1;
-    background: transparent;
+    background: #EED9E7;
+    border: 1px solid #DFC1D5;
+    font-weight: 600;
 }
 
 [data-theme="light"] .nav-arrow {
