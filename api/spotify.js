@@ -1,9 +1,43 @@
 
 let cachedAccessToken = null;
 let tokenExpiresAt = 0;
-let recentTrackCache = null;
-let recentTrackFetchedAt = 0;
-let recentTrackRetryAt = 0;
+
+const CACHE_KEY = "spotify:last-played";
+const LOCK_KEY = "spotify:recently-played:lock";
+
+// =================================
+// REDIS
+// =================================
+
+async function redisCommand(command) {
+    const url = process.env.KV_REST_API_URL;
+    const token = process.env.KV_REST_API_TOKEN;
+
+    if (!url || !token) {
+        throw new Error("Redis environment variables are missing.");
+    }
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(command)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || data.error) {
+        throw new Error(data.error || "Redis request failed.");
+    }
+
+    return data.result;
+}
+
+// =================================
+// SPOTIFY ACCESS TOKEN
+// =================================
 
 async function getSpotifyAccessToken() {
     // Reuse the token while it is valid.
@@ -54,6 +88,10 @@ async function getSpotifyAccessToken() {
     return cachedAccessToken;
 }
 
+// =================================
+// SPOTIFY API HANDLER
+// =================================
+
 export default async function handler(req, res) {
     if (req.method !== "GET") {
         return res.status(405).json({
@@ -68,7 +106,10 @@ export default async function handler(req, res) {
             Authorization: `Bearer ${accessToken}`
         };
 
-        // Check whether a track is currently playing.
+        // =================================
+        // CURRENTLY PLAYING
+        // =================================
+
         const currentResponse = await fetch(
             "https://api.spotify.com/v1/me/player/currently-playing",
             { headers }
@@ -98,55 +139,120 @@ export default async function handler(req, res) {
             );
         }
 
-        // If nothing is playing, use cached listening history first.
+        // =================================
+        // LAST PLAYED - REDIS CACHE
+        // =================================
+
         if (!track) {
-            const now = Date.now();
-            const cacheIsFresh = now - recentTrackFetchedAt < 60000;
+            try {
+                // Retrieve the last successful track.
+                const cachedValue = await redisCommand([
+                    "GET",
+                    CACHE_KEY
+                ]);
 
-            if (cacheIsFresh) {
-                track = recentTrackCache;
-            } else if (now >= recentTrackRetryAt) {
-                const recentResponse = await fetch(
-                    "https://api.spotify.com/v1/me/player/recently-played?limit=1",
-                    { headers }
-                );
+                const cachedHistory = cachedValue
+                    ? JSON.parse(cachedValue)
+                    : null;
 
-                if (recentResponse.status === 429) {
-                    const retryAfter = Number(
-                        recentResponse.headers.get("Retry-After") || 60
-                    );
+                track = cachedHistory?.track || null;
+                playedAt = cachedHistory?.playedAt || null;
 
-                    recentTrackRetryAt = now + retryAfter * 1000;
+                // Allow only one history request per minute globally.
+                const lock = await redisCommand([
+                    "SET",
+                    LOCK_KEY,
+                    "1",
+                    "EX",
+                    "60",
+                    "NX"
+                ]);
 
-                    console.warn(
-                        `[Spotify] Rate limited. Retrying after ${retryAfter} seconds.`
-                    );
+                if (lock === "OK") {
+                    let keepLock = false;
 
-                    track = recentTrackCache;
-                } else if (!recentResponse.ok) {
-                    throw new Error(
-                        `Spotify history request failed: ${recentResponse.status}`
-                    );
-                } else {
-                    const recentData = await recentResponse.json();
-                    const recentItem = recentData.items?.[0];
+                    try {
+                        const recentResponse = await fetch(
+                            "https://api.spotify.com/v1/me/player/recently-played?limit=1",
+                            { headers }
+                        );
 
-                    recentTrackCache = recentItem?.track || null;
-                    recentTrackFetchedAt = now;
-                    recentTrackRetryAt = 0;
+                        if (recentResponse.status === 429) {
+                            const retryAfterHeader =
+                                recentResponse.headers.get("Retry-After");
 
-                    track = recentTrackCache;
+                            const parsedRetryAfter = Number(retryAfterHeader);
 
-                    if (recentItem) {
-                        playedAt = recentItem.played_at;
+                            const retryAfter = Number.isFinite(parsedRetryAfter)
+                                ? Math.max(1, parsedRetryAfter)
+                                : 60;
+
+                            // Respect Spotify's rate limit globally.
+                            await redisCommand([
+                                "SET",
+                                LOCK_KEY,
+                                "1",
+                                "EX",
+                                retryAfter
+                            ]);
+
+                            keepLock = true;
+
+                            console.warn(
+                                `[Spotify] Rate limited. Retrying after ${retryAfter} seconds.`
+                            );
+                        } else if (!recentResponse.ok) {
+                            throw new Error(
+                                `Spotify history request failed: ${recentResponse.status}`
+                            );
+                        } else {
+                            const recentData = await recentResponse.json();
+                            const recentItem = recentData.items?.[0];
+
+                            if (recentItem?.track) {
+                                const newHistory = {
+                                    track: recentItem.track,
+                                    playedAt: recentItem.played_at
+                                };
+
+                                // Save the last played track persistently.
+                                await redisCommand([
+                                    "SET",
+                                    CACHE_KEY,
+                                    JSON.stringify(newHistory)
+                                ]);
+
+                                track = newHistory.track;
+                                playedAt = newHistory.playedAt;
+                            }
+
+                            // Keep the lock for 60 seconds after a
+                            // successful history request.
+                            keepLock = true;
+                        }
+                    } finally {
+                        // Release the lock immediately on other failures.
+                        if (!keepLock) {
+                            await redisCommand([
+                                "DEL",
+                                LOCK_KEY
+                            ]);
+                        }
                     }
                 }
-            } else {
-                track = recentTrackCache;
+            } catch (redisError) {
+                // Redis/history failure must not affect currently playing.
+                console.error(
+                    "[Spotify] Redis/history error:",
+                    redisError
+                );
             }
         }
 
-        // Return only the track information needed by the website.
+        // =================================
+        // PUBLIC TRACK RESPONSE
+        // =================================
+
         const publicTrack = track
             ? {
                 name: track.name,
@@ -174,7 +280,7 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
-        console.error("Spotify API error:", error);
+        console.error("[Spotify] API error:", error);
 
         return res.status(500).json({
             error: "Unable to fetch Spotify activity"
