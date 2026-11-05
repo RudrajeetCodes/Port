@@ -129,6 +129,28 @@ export default async function handler(req, res) {
             ) {
                 track = currentData.item;
                 isPlaying = true;
+
+                // Persist the currently playing track for Last Played fallback.
+                try {
+                    const currentHistory = {
+                        track: currentData.item,
+                        playedAt: new Date(
+                            currentData.timestamp || Date.now()
+                        ).toISOString()
+                    };
+
+                    await redisCommand([
+                        "SET",
+                        CACHE_KEY,
+                        JSON.stringify(currentHistory)
+                    ]);
+
+                } catch (cacheError) {
+                    console.error(
+                        "[Spotify] Unable to cache currently playing track:",
+                        cacheError
+                    );
+                }
             }
         } else if (
             currentResponse.status !== 204 &&
