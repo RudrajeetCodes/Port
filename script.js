@@ -941,10 +941,11 @@ async function fetchGithubContributions() {
             ...sortedDays
         ];
 
-        const totalContributions = sortedDays.reduce(
-            (sum, day) => sum + day.contributionCount,
-            0
-        );
+        const totalContributions = data.contributions ??
+            sortedDays.reduce(
+                (sum, day) => sum + day.contributionCount,
+                0
+            );
 
         if (total) {
             total.textContent = totalContributions.toLocaleString();
