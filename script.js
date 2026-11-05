@@ -1202,3 +1202,126 @@ document.addEventListener("visibilitychange", () => {
         startQuoteRotation();
     }
 });
+
+// =================================
+// DYNAMIC SIDE STARFIELD
+// =================================
+
+(() => {
+    if (window.matchMedia("(max-width: 1199px)").matches) return;
+
+    const canvas = document.createElement("canvas");
+    canvas.className = "starfield-canvas";
+    canvas.setAttribute("aria-hidden", "true");
+
+    document.body.prepend(canvas);
+
+    const ctx = canvas.getContext("2d");
+
+    let stars = [];
+    let width = 0;
+    let height = 0;
+    let animationFrame;
+
+    const STAR_COUNT = 65;
+
+
+    function createStars() {
+        stars = [];
+
+        const container = document.querySelector(".main-container");
+
+        if (!container) return;
+
+        const rect = container.getBoundingClientRect();
+
+        // Keep stars outside the main content, with a 20px buffer.
+        const leftBoundary = Math.max(0, rect.left - 20);
+        const rightBoundary = Math.min(width, rect.right + 20);
+
+        const leftWidth = leftBoundary;
+        const rightWidth = width - rightBoundary;
+        const totalSideWidth = leftWidth + rightWidth;
+
+        if (totalSideWidth <= 0) return;
+
+        for (let i = 0; i < STAR_COUNT; i++) {
+            // Distribute stars according to available side space.
+            const leftSide = Math.random() < leftWidth / totalSideWidth;
+
+            const x = leftSide
+                ? Math.random() * leftWidth
+                : rightBoundary + Math.random() * rightWidth;
+
+            stars.push({
+                x,
+                y: Math.random() * height,
+                radius: Math.random() * 1.2 + 0.5,
+                opacity: Math.random() * 0.55 + 0.2,
+                speed: Math.random() * 0.002 + 0.001,
+                phase: Math.random() * Math.PI * 2,
+                glow: Math.random() * 8 + 4
+            });
+        }
+    }
+
+    function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        width = window.innerWidth;
+        height = window.innerHeight;
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        createStars();
+    }
+
+    function animate(time) {
+        ctx.clearRect(0, 0, width, height);
+
+        const isLight =
+            document.documentElement.dataset.theme === "light";
+
+        stars.forEach(star => {
+            const twinkle =
+                (Math.sin(time * star.speed + star.phase) + 1) / 2;
+
+            const alpha = star.opacity * (0.35 + twinkle * 0.65);
+
+            const color = isLight
+                ? `rgba(137, 96, 147, ${alpha})`
+                : `rgba(220, 225, 255, ${alpha})`;
+
+            ctx.beginPath();
+
+            ctx.shadowBlur = star.glow;
+            ctx.shadowColor = color;
+            ctx.fillStyle = color;
+
+            ctx.arc(
+                star.x,
+                star.y,
+                star.radius,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+        });
+
+        ctx.shadowBlur = 0;
+
+        animationFrame = requestAnimationFrame(animate);
+    }
+
+    resizeCanvas();
+
+    window.addEventListener("resize", resizeCanvas);
+
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        animationFrame = requestAnimationFrame(animate);
+    }
+})();
