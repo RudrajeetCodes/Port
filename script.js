@@ -128,6 +128,7 @@ function setTheme(theme) {
 // Apply saved theme
 setTheme(savedTheme);
 
+
 // Toggle theme on click
 themeToggle.addEventListener("click", () => {
     const currentTheme = html.getAttribute("data-theme");
@@ -136,6 +137,7 @@ themeToggle.addEventListener("click", () => {
     setTheme(newTheme);
     playThemeSound(newTheme);
 });
+
 
 // =================================
 // EXPERIENCE DROPDOWN ANIMATIONS

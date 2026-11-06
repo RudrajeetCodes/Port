@@ -557,8 +557,6 @@ body,
     border-color: #777777;
 }
 
-
-
 /* ==============================
    TECH STACK SECTION
 ================================ */
@@ -2636,6 +2634,7 @@ html[data-loader-seen="true"] .loading-screen {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -2649,5 +2648,630 @@ body.page-leaving .main-container {
     .main-container {
         animation: none;
         transition: none;
+    }
+}
+
+
+/* =========================================
+   COMPLETE MOBILE RESPONSIVE LAYOUT
+========================================= */
+
+/* TABLET AND MOBILE */
+@media (max-width: 768px) {
+
+    /* Main layout */
+    html {
+        scrollbar-gutter: auto;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .main-container {
+        width: 100%;
+        max-width: 100%;
+        border-left: 1px dashed var(--border-primary);
+        border-right: 1px dashed var(--border-primary);
+        padding-bottom: calc(82px + env(safe-area-inset-bottom));
+    }
+
+    /* Hide desktop section navigation */
+    .floating-nav {
+        display: none !important;
+    }
+
+    /* Move page navigation to bottom */
+    .page-nav {
+        position: fixed;
+        top: auto;
+        bottom: calc(14px + env(safe-area-inset-bottom));
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        width: max-content;
+        padding: 8px;
+
+        background: rgba(24, 24, 24, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+    }
+
+    [data-theme="light"] .page-nav {
+        background: rgba(240, 227, 241, 0.9);
+        border-color: rgba(120, 100, 130, 0.2);
+        box-shadow: 0 8px 30px rgba(70, 50, 80, 0.12);
+    }
+
+    .page-nav-item {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        opacity: 0.65;
+    }
+
+    .page-nav-item.active {
+        background: var(--bg-tertiary);
+        opacity: 1;
+    }
+
+    [data-theme="light"] .page-nav-item.active {
+        background: #EED9E7;
+    }
+
+    /* Header */
+    .hero-top {
+        padding: 18px 18px;
+    }
+
+    .brand-icon img {
+        width: 34px;
+        height: 34px;
+    }
+
+    .theme-toggle {
+        width: 36px;
+        height: 36px;
+    }
+
+    /* Hero banner */
+    .hero-banner {
+        width: calc(100% - 28px);
+        height: clamp(135px, 38vw, 210px);
+        margin: 5px auto 0;
+        border-radius: 14px;
+    }
+
+    /* Profile */
+    .profile-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+        margin: 24px 20px 0;
+    }
+
+    .profile-left {
+        width: 100%;
+        flex: none;
+        flex-direction: row;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .profile-picture {
+        width: 100px;
+        height: 100px;
+        flex: 0 0 100px;
+        border-radius: 23px;
+    }
+
+    .status-pill {
+        gap: 7px;
+        padding: 9px 11px;
+        font-size: 10px;
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+    }
+
+    .profile-info {
+        width: 100%;
+        padding-top: 0;
+    }
+
+    .profile-info h1 {
+        font-size: clamp(25px, 6vw, 30px);
+    }
+
+    .dynamic-role {
+        font-size: 14px;
+    }
+
+    /* Profile bio */
+    .profile-bio {
+        margin: 24px 20px 0;
+        max-width: none;
+    }
+
+    .profile-bio p {
+        font-size: 15px;
+        line-height: 1.9;
+    }
+
+    .tech-badge {
+        font-size: 12px;
+        padding: 3px 6px;
+    }
+
+    .tech-badge svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    /* Profile actions */
+    .profile-actions {
+        margin: 24px 20px 0;
+    }
+
+    .action-buttons {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .action-buttons a {
+        padding: 10px 13px;
+        font-size: 12px;
+    }
+
+    .social-links {
+        gap: 20px;
+        margin-top: 22px;
+    }
+
+    .social-links a {
+        font-size: 21px;
+    }
+
+    /* Section headings */
+    .section-heading {
+        gap: 6px;
+        margin-bottom: 20px;
+    }
+
+    .section-heading h2 {
+        font-size: 24px;
+    }
+
+    .section-label {
+        font-size: 11px;
+    }
+
+    /* Tech stack */
+    .tech-section {
+        padding: 30px 20px;
+    }
+
+    .tech-stack {
+        gap: 7px;
+    }
+
+    .tech-tag {
+        font-size: 13px;
+        padding: 6px 9px;
+    }
+
+    .tech-tag img,
+    .tech-tag svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    /* Experience */
+    .experience-section {
+        padding: 30px 14px;
+    }
+
+    .experience-summary {
+        min-height: 75px;
+        padding: 13px 14px;
+        gap: 9px;
+    }
+
+    .experience-left {
+        gap: 10px;
+    }
+
+    .experience-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
+    }
+
+    .experience-info h3 {
+        font-size: 12px;
+    }
+
+    .experience-info p {
+        font-size: 11px;
+    }
+
+    .experience-right {
+        gap: 5px;
+    }
+
+    .experience-date {
+        font-size: 11px;
+    }
+
+    .experience-type {
+        font-size: 9px;
+    }
+
+    .experience-chevron {
+        width: 14px;
+        height: 14px;
+    }
+
+    .experience-details {
+        margin: 0 10px 14px;
+        padding: 13px;
+    }
+
+    .log-entry p {
+        font-size: 12px;
+    }
+
+    /* Projects */
+    .projects-section {
+        padding: 30px 15px;
+    }
+
+    .projects-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 15px;
+    }
+
+    .project-card {
+        padding: 13px;
+        border-radius: 17px;
+    }
+
+    .project-title {
+        font-size: 14px;
+    }
+
+    .project-description {
+        font-size: 12px;
+    }
+
+    .project-footer {
+        flex-wrap: wrap;
+    }
+
+    .projects-github-link {
+        font-size: 10px;
+    }
+
+    /* Profile activity cards */
+    .profile-activity {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 11px;
+        margin: 24px 20px 0;
+    }
+
+    .activity-card {
+        min-height: 78px;
+        padding: 12px 14px;
+    }
+
+    .activity-artwork {
+        width: 45px;
+        height: 45px;
+    }
+
+    .activity-title {
+        font-size: 13px;
+    }
+
+    /* About */
+    .about-section {
+        padding: 30px 20px;
+    }
+
+    .about-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .about-picture {
+        width: 150px;
+        height: 150px;
+        flex: 0 0 150px;
+    }
+
+    .about-info h3 {
+        font-size: 24px;
+    }
+
+    .about-description {
+        font-size: 13px;
+    }
+
+    .about-section .profile-activity {
+        grid-template-columns: minmax(0, 1fr);
+        margin: 24px 0 0;
+    }
+
+    /* Developer statistics */
+    .dev-stats-section {
+        padding: 30px 14px;
+    }
+
+    .github-contributions {
+        padding: 15px 11px;
+    }
+
+    .coding-top {
+        gap: 7px;
+        padding-bottom: 17px;
+    }
+
+    .coding-stat {
+        gap: 6px;
+    }
+
+    .coding-stat strong {
+        font-size: 12px;
+    }
+
+    .coding-stat .activity-label {
+        font-size: 9px;
+        letter-spacing: 0.4px;
+    }
+
+    .coding-project-stat strong {
+        font-size: 11px;
+    }
+
+    .github-inner {
+        padding: 13px 10px;
+    }
+
+    .github-contributions-header {
+        font-size: 10px;
+        flex-wrap: wrap;
+    }
+
+    .github-profile-btn {
+        font-size: 10px;
+        padding: 6px 8px;
+    }
+
+    .github-calendar {
+        overflow-x: auto;
+    }
+
+    .github-graph {
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+
+    .github-calendar-footer {
+        font-size: 9px;
+    }
+
+    .legend-cell {
+        width: 8px;
+        height: 8px;
+    }
+
+    /* GitHub activity */
+    .github-activity-card {
+        padding: 18px 13px;
+    }
+
+    .github-activity-item {
+        grid-template-columns: 14px minmax(0, 1fr) auto;
+        gap: 8px;
+    }
+
+    .activity-commit-message {
+        font-size: 10px;
+    }
+
+    .activity-commit-repo {
+        display: none;
+    }
+
+    .activity-commit-date {
+        min-width: auto;
+        font-size: 9px;
+    }
+
+    /* Quote */
+    .quote-section {
+        padding: 25px 15px 30px;
+    }
+
+    .quote-card {
+        padding: 21px 18px;
+    }
+
+    .quote-card blockquote {
+        font-size: 13px;
+    }
+
+    .quote-author {
+        font-size: 11px;
+    }
+
+    /* Footer */
+    .site-footer {
+        padding: 20px 15px;
+    }
+
+    .site-footer p {
+        font-size: 10px;
+    }
+}
+
+
+/* SMALL PHONES */
+@media (max-width: 420px) {
+
+    .hero-top {
+        padding: 16px 15px;
+    }
+
+    .hero-banner {
+        height: 140px;
+    }
+
+    .profile-section {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    .profile-picture {
+        width: 86px;
+        height: 86px;
+        flex-basis: 86px;
+        border-radius: 20px;
+    }
+
+    .status-pill {
+        padding: 8px 9px;
+        font-size: 9px;
+        gap: 6px;
+    }
+
+    .profile-bio {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    .profile-bio p {
+        font-size: 14px;
+    }
+
+    .profile-actions {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    .section-heading h2 {
+        font-size: 22px;
+    }
+
+    .experience-summary {
+        padding: 12px 10px;
+    }
+
+    .experience-left {
+        gap: 8px;
+    }
+
+    .experience-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .experience-info h3 {
+        font-size: 11px;
+    }
+
+    .experience-date {
+        font-size: 10px;
+    }
+
+    .projects-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .github-contributions-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .coding-stat strong {
+        font-size: 11px;
+    }
+
+    .page-nav {
+        bottom: calc(10px + env(safe-area-inset-bottom));
+    }
+}
+
+
+/* REDUCED MOTION */
+@media (prefers-reduced-motion: reduce) {
+
+    .page-nav,
+    .page-nav-item {
+        transition: none !important;
+    }
+}
+
+/* Hide GitHub contribution calendar on mobile */
+@media (max-width: 768px) {
+    .github-calendar {
+        display: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-picture {
+        align-self: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* Keep quote section height stable on mobile */
+@media (max-width: 768px) {
+
+    .quote-card {
+        height: 155px;
+        min-height: 155px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        padding: 18px 20px;
+        overflow: hidden;
+    }
+
+    .quote-card blockquote {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+
+        overflow: hidden;
+        font-size: 13px;
+        line-height: 1.65;
+    }
+
+    .quote-author {
+        flex-shrink: 0;
+        margin-top: 10px;
+        font-size: 11px;
     }
 }
