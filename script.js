@@ -1388,3 +1388,55 @@ document.addEventListener("visibilitychange", () => {
     }
 
 })();
+
+// =================================
+// PORTFOLIO LOADING SCREEN
+// =================================
+
+(() => {
+    const loader = document.getElementById("loadingScreen");
+    const progressBar = document.getElementById("loaderProgressBar");
+    const percentage = document.getElementById("loaderPercentage");
+
+    if (!loader || !progressBar || !percentage) return;
+
+    try {
+        if (sessionStorage.getItem("portfolioLoaderShown") === "true") {
+            loader.remove();
+            return;
+        }
+
+        sessionStorage.setItem("portfolioLoaderShown", "true");
+    } catch (error) {
+        // Continue showing the loader if session storage is unavailable.
+    }
+
+    const duration = 2600;
+    const startTime = performance.now();
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function updateLoader(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const value = Math.round(progress * 100);
+
+        progressBar.style.width = `${value}%`;
+        percentage.textContent = `${value}%`;
+
+        if (progress < 1) {
+            requestAnimationFrame(updateLoader);
+            return;
+        }
+
+        loader.classList.add("is-hidden");
+        document.body.style.overflow = originalOverflow;
+
+        setTimeout(() => {
+            loader.remove();
+        }, 600);
+    }
+
+    requestAnimationFrame(updateLoader);
+})();

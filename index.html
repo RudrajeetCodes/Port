@@ -15,9 +15,47 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script>
+        try {
+            if (sessionStorage.getItem("portfolioLoaderShown") === "true") {
+                document.documentElement.setAttribute("data-loader-seen", "true");
+            }
+        } catch (error) {
+            // Keep the loader enabled if session storage is unavailable.
+        }
+    </script>
 </head>
 
 <body>
+
+
+    <!-- LOADING SCREEN -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader-content">
+
+            <div class="loader-brand">
+                <img class="loader-monogram" src="assets/images/profile.png" alt="Rudrajeet Das">
+                <span class="loader-name">RUDRAJEET<span>.</span></span>
+            </div>
+
+            <p class="loader-subtitle">SOFTWARE DEVELOPER · PORTFOLIO</p>
+
+            <div class="loader-terminal">
+                <p><span>&gt;</span> Initializing portfolio...</p>
+                <p><span>&gt;</span> Loading resources...</p>
+                <p><span>&gt;</span> Preparing experience...</p>
+                <p class="loader-status"><span>&gt;</span> Welcome.</p>
+            </div>
+
+            <div class="loader-progress">
+                <div class="loader-progress-track">
+                    <div class="loader-progress-bar" id="loaderProgressBar"></div>
+                </div>
+                <span class="loader-percentage" id="loaderPercentage">0%</span>
+            </div>
+
+        </div>
+    </div>
 
     <main class="main-container">
 
